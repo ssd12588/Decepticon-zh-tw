@@ -194,6 +194,7 @@ func systemCheckGroup(sys platform.SystemInfo) *huh.Group {
 		b.WriteString(sys.DockerHint() + "\n")
 		b.WriteString("你仍可先設定憑證，等啟動前再處理 Docker。")
 	}
+	b.WriteString("\n\n按 Enter 繼續（這是說明頁，不需要輸入內容）")
 
 	return huh.NewGroup(
 		huh.NewNote().
@@ -306,14 +307,14 @@ func runOnboard(cmd *cobra.Command, args []string) error {
 		huh.NewGroup(
 			huh.NewNote().
 				Title("Decepticon 設定精靈").
-				Description("Configure auth methods, model profile, and\nobservability.\n\nUse ↑↓ to navigate, space to toggle, Enter to confirm."),
+				Description("設定驗證方式、模型設定檔與可觀測性。\n\n↑↓ 移動、空白鍵切換、Enter 確認。\n這是說明頁，按 Enter 即可進入下一步。"),
 		),
 
 		// Step 1: Auth methods (multi-select)
 		huh.NewGroup(
 			huh.NewMultiSelect[string]().
 				Title("驗證方式").
-				Description("Press SPACE to toggle, ENTER to confirm.\nUse ↑↓ to scroll, '/' to filter the list.\nPick every credential you have — each is an\nindependent fallback in priority order.").
+				Description("按空白鍵切換選取、Enter 確認。\n↑↓ 捲動、按 / 可篩選清單。\n你有幾個憑證就選幾個 —— 每一個都會成為\n依優先順序排列的獨立備援。").
 				Filterable(true).
 				Height(15).
 				Options(
