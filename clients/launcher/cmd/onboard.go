@@ -43,7 +43,7 @@ exists; without it the wizard is skipped when .env already exists.`,
 }
 
 func init() {
-	onboardCmd.Flags().BoolVar(&resetFlag, "reset", false, "Reconfigure even if .env already exists")
+	onboardCmd.Flags().BoolVar(&resetFlag, "reset", false, "即使 .env 已存在也重新設定")
 	rootCmd.AddCommand(onboardCmd)
 }
 
@@ -189,15 +189,15 @@ func systemCheckGroup(sys platform.SystemInfo) *huh.Group {
 	b.WriteString("Docker   " + docker + "\n\n")
 
 	if sys.Ready() {
-		b.WriteString("This system is ready to run Decepticon.")
+		b.WriteString("本系統已可執行 Decepticon。")
 	} else {
 		b.WriteString(sys.DockerHint() + "\n")
-		b.WriteString("You can still configure credentials now and sort out Docker before launching.")
+		b.WriteString("你仍可先設定憑證，等啟動前再處理 Docker。")
 	}
 
 	return huh.NewGroup(
 		huh.NewNote().
-			Title("System Check").
+			Title("系統檢查").
 			Description(b.String()),
 	)
 }
@@ -213,7 +213,7 @@ func runOnboard(cmd *cobra.Command, args []string) error {
 		var err error
 		existingEnv, err = config.LoadEnv(config.EnvPath())
 		if err != nil {
-			return fmt.Errorf("read existing .env: %w", err)
+			return fmt.Errorf("讀取既有 .env 失敗：%w", err)
 		}
 	}
 
@@ -305,14 +305,14 @@ func runOnboard(cmd *cobra.Command, args []string) error {
 		// Intro
 		huh.NewGroup(
 			huh.NewNote().
-				Title("Decepticon Setup").
+				Title("Decepticon 設定精靈").
 				Description("Configure auth methods, model profile, and\nobservability.\n\nUse ↑↓ to navigate, space to toggle, Enter to confirm."),
 		),
 
 		// Step 1: Auth methods (multi-select)
 		huh.NewGroup(
 			huh.NewMultiSelect[string]().
-				Title("Auth Methods").
+				Title("驗證方式").
 				Description("Press SPACE to toggle, ENTER to confirm.\nUse ↑↓ to scroll, '/' to filter the list.\nPick every credential you have — each is an\nindependent fallback in priority order.").
 				Filterable(true).
 				Height(15).
@@ -352,12 +352,12 @@ func runOnboard(cmd *cobra.Command, args []string) error {
 				Value(&methods).
 				Validate(func(s []string) error {
 					if len(s) == 0 {
-						return fmt.Errorf("select at least one credential")
+						return fmt.Errorf("請至少選擇一種憑證")
 					}
 					return nil
 				}),
 		).Title("1 / 5  ·  Credentials").
-			Description("Select all that apply"),
+			Description("可複選"),
 
 		// Step 2-claude-oauth: Claude Code subscription long-lived token.
 		// Run `claude setup-token` once (any machine, interactive browser
@@ -805,7 +805,7 @@ func runOnboard(cmd *cobra.Command, args []string) error {
 		// Step 3: Model profile
 		huh.NewGroup(
 			huh.NewSelect[string]().
-				Title("Model Profile").
+				Title("模型設定檔").
 				Description("eco  per-agent tier (recommended)\nmax  every agent on HIGH (expensive)\ntest every agent on LOW (development)").
 				Options(
 					huh.NewOption("eco  — per-agent tier (recommended)", "eco"),
@@ -818,7 +818,7 @@ func runOnboard(cmd *cobra.Command, args []string) error {
 		// Step 4: Language
 		huh.NewGroup(
 			huh.NewSelect[string]().
-				Title("Agent Language").
+				Title("代理語言").
 				Description("Language for all agent prose output (menus, questions,\nsummaries, errors). Technical output stays in English.\nCountry codes (dk, se, jp, cn) are auto-resolved.").
 				Options(
 					huh.NewOption("en     — English (default)", "en"),
@@ -868,7 +868,7 @@ func runOnboard(cmd *cobra.Command, args []string) error {
 		huh.NewGroup(
 			huh.NewConfirm().
 				Title("Enable LangSmith?").
-				Description("LLM observability and trace collection").
+				Description("LLM 可觀測性與追蹤收集").
 				Affirmative("Yes").
 				Negative("No").
 				Value(&useLangSmith),
