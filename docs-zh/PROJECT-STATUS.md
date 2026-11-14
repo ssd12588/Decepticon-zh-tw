@@ -32,6 +32,7 @@
 | 中文入門包（上手／排錯／交接） | `docs-zh/QUICKSTART.md`、`TROUBLESHOOTING.md`、`PROJECT-STATUS.md` | ✅ |
 | **Ink 對話介面（TUI）** | `clients/cli/src/**`（40 檔、227 處字面量） | ✅ |
 | 漢化工具（字面量對照表＋腳本） | `tools/i18n/tui_zh.py`、`tui_zh_map.py`、`tests_zh.py` | ✅ |
+| Windows 一鍵啟動 | `start-decepticon.ps1`（環境檢查／建置／記住設定／友善中文錯誤） | ✅ |
 
 **刻意保持英文**（改了會影響 AI 判斷或直接弄壞程式）：
 

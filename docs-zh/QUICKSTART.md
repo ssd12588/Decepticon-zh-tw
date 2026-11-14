@@ -16,6 +16,34 @@
 
 ## 1. 安裝
 
+### 路線 A（推薦）：從漢化版原始碼一鍵建置
+
+官方安裝腳本抓的是**上游英文版**；要中文介面就用這條路線。
+
+```powershell
+winget install GoLang.Go OpenJS.NodeJS.LTS    # 只需一次
+git clone -b zh-TW https://github.com/ssd12588/Decepticon-zh-tw.git
+cd Decepticon-zh-tw
+.\start-decepticon.ps1 -Check                  # 先驗環境（不耗 API 額度）
+.\start-decepticon.ps1                         # 建置 → 初始化 → 啟動
+```
+
+一鍵腳本會依序處理：檢查 Docker／Go／Node → 建置啟動器與對話介面 → 記住語言設定（`tw`）→ 首次自動跑 `onboard` → 啟動。
+
+常用參數：
+
+| 參數 | 用途 |
+|---|---|
+| `-Check` | 只檢查環境與建置狀態，不初始化、不啟動 |
+| `-NoCli` | 只啟動服務堆疊（`start --background`），不進入對話 |
+| `-ResetConfig` | 清除記住的啟動設定 |
+| `-DecepticonArgs '--continue'` | 把參數原樣傳給 `decepticon` |
+
+> 若執行時出現「無法執行腳本」，先跑一次：
+> `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`
+
+### 路線 B：官方安裝腳本（安裝的是上游英文版）
+
 **macOS / Linux / WSL2**
 
 ```bash

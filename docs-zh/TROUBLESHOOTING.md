@@ -68,6 +68,19 @@ chcp 65001              # 不是的話手動切
 
 安裝後請**完全關閉終端機再重開**，PATH 才會生效。或用完整路徑呼叫。
 
+### 執行 `start-decepticon.ps1` 時中文變亂碼或直接報語法錯誤
+
+原因是 `.ps1` 被存成「UTF-8 無 BOM」時，Windows PowerShell 5.1 會用 ANSI（CP950）解讀。
+本倉庫的腳本已存成 **UTF-8 with BOM**，若你自行編輯後失效，請重新存檔：
+
+```powershell
+$p = ".\start-decepticon.ps1"
+$c = Get-Content -Raw -Encoding UTF8 $p
+[IO.File]::WriteAllText($p, $c, (New-Object System.Text.UTF8Encoding($true)))
+```
+
+或者直接用 PowerShell 7（`pwsh`）執行，它預設以 UTF-8 讀檔。
+
 ### 埠被占用
 
 `langgraph: 失敗` 且訊息提到 `connectex` 或 `connection refused`：
