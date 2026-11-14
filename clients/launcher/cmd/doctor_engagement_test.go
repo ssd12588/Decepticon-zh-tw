@@ -17,7 +17,7 @@ func TestDoctorEngagementValidationPrecedesHostProbes(t *testing.T) {
 	for _, value := range []string{"../escape", "ab", "valid-name"} {
 		_ = command.Flags().Set("engagement", value)
 		err := command.RunE(command, nil)
-		if err == nil || (!strings.Contains(err.Error(), "invalid engagement") && !strings.Contains(err.Error(), "requires --deep")) {
+		if err == nil || (!strings.Contains(err.Error(), "名稱格式不正確") && !strings.Contains(err.Error(), "需要搭配 --deep")) {
 			t.Fatalf("%q unexpectedly reached host probes: %v", value, err)
 		}
 	}

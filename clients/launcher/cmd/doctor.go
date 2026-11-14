@@ -19,7 +19,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var errDoctorFailed = errors.New("required checks failed; see recovery commands in the doctor report")
+var errDoctorFailed = errors.New("必要檢查未通過；請參考 doctor 報告中的復原指令")
 
 type doctorCheck struct {
 	Name     string `json:"name"`
@@ -37,39 +37,37 @@ type doctorReport struct {
 func init() {
 	command := &cobra.Command{
 		Use:   "doctor",
-		Short: "Read-only installation and service diagnostics",
-		Long: `Run read-only diagnostics on the Decepticon installation.
+		Short: "唯讀的安裝與服務診斷",
+		Long: `對 Decepticon 安裝執行唯讀診斷。
 
-It checks (in order): Docker presence and daemon response, Docker
-Compose V2, configuration (.env and docker-compose.yml) and
-authentication, LangGraph readiness, the opscontrol Unix socket and
-daemon health, and optional blue-team monitoring endpoints.
+依序檢查：Docker 是否存在與常駐程式是否回應、Docker Compose V2、
+設定檔（.env 與 docker-compose.yml）與驗證方式、LangGraph 就緒狀態、
+opscontrol Unix socket 與常駐程式健康狀態，以及選用的藍隊監控端點。
 
-With --deep, read-only runtime diagnostics also run inside the
-langgraph container (python -m decepticon.diagnostics): KG store
-reachability, Skillogy health, HITL/model-fallback slot resolution and
-the MCP auth mode.
+加上 --deep 時，會在 langgraph 容器內額外執行唯讀的執行期診斷
+（python -m decepticon.diagnostics）：KG 儲存區可達性、Skillogy 健康
+狀態、HITL／模型備援插槽解析，以及 MCP 驗證模式。
 
-Nothing is modified. The command exits non-zero when a required check
-fails; optional checks are reported but do not affect the exit code.`,
-		Example: `  decepticon doctor           Run all diagnostics and print a report
-  decepticon doctor --json    Print a machine-readable report for CI
-  decepticon doctor --deep    Also run the in-container runtime diagnostics`,
+本指令不會修改任何東西。必要檢查失敗時結束碼非 0；選用檢查只會
+回報，不影響結束碼。`,
+		Example: `  decepticon doctor           執行所有診斷並印出報告
+  decepticon doctor --json    輸出適合 CI 使用的機器可讀報告
+  decepticon doctor --deep    同時執行容器內的執行期診斷`,
 		Args: cobra.NoArgs,
 	}
-	command.Flags().Bool("json", false, "Print a machine-readable report")
-	command.Flags().Bool("deep", false, "Also run read-only runtime diagnostics inside the langgraph container (requires the stack)")
-	command.Flags().String("engagement", "", "Scope deep KG revision and node counts to this engagement")
+	command.Flags().Bool("json", false, "輸出機器可讀的報告")
+	command.Flags().Bool("deep", false, "在 langgraph 容器內額外執行唯讀的執行期診斷（需要服務堆疊）")
+	command.Flags().String("engagement", "", "把深度 KG 修訂版與節點統計限定在此授權測試任務")
 	command.RunE = func(cmd *cobra.Command, _ []string) error {
 		engagement, _ := cmd.Flags().GetString("engagement")
 		if engagement != "" {
 			valid, _ := regexp.MatchString(`^[a-z0-9][a-z0-9-]{1,62}[a-z0-9]$`, engagement)
 			if !valid {
-				return fmt.Errorf("invalid engagement slug")
+				return fmt.Errorf("授權測試任務名稱格式不正確")
 			}
 			deep, _ := cmd.Flags().GetBool("deep")
 			if !deep {
-				return fmt.Errorf("--engagement requires --deep")
+				return fmt.Errorf("--engagement 需要搭配 --deep")
 			}
 		}
 		report := diagnose(cmd.Context())
@@ -84,20 +82,20 @@ fails; optional checks are reported but do not affect the exit code.`,
 		}
 		if jsonOutput {
 			if err := json.NewEncoder(cmd.OutOrStdout()).Encode(report); err != nil {
-				return fmt.Errorf("write doctor report: %w", err)
+				return fmt.Errorf("寫入 doctor 報告失敗：%w", err)
 			}
 		} else {
 			for _, check := range report.Checks {
-				status := "ok"
+				status := "正常"
 				if !check.OK {
-					status = "failed"
+					status = "失敗"
 					if !check.Required {
-						status = "optional"
+						status = "選用"
 					}
 				}
-				cmd.Printf("%s: %s — %s\n", check.Name, status, check.Detail)
+				cmd.Printf("%s: %s —— %s\n", check.Name, status, check.Detail)
 				if check.Recovery != "" {
-					cmd.Printf("  Recovery: %s\n", check.Recovery)
+					cmd.Printf("  復原方式：%s\n", check.Recovery)
 				}
 			}
 		}
@@ -121,41 +119,41 @@ func diagnose(ctx context.Context) doctorReport {
 		}
 	}
 	_, err := exec.LookPath("docker")
-	add("docker", true, err == nil, "Docker executable presence", "Open https://docs.docker.com/get-docker/ and install Docker; then run `docker version`")
-	add("docker_daemon", true, doctorExec(ctx, "docker", "info", "--format", "{{.ServerVersion}}") == nil, "Docker daemon response (3s timeout)", "Start Docker Desktop or run `sudo systemctl start docker`; retry `decepticon doctor`")
-	add("compose", true, doctorExec(ctx, "docker", "compose", "version") == nil, "Docker Compose V2 response (3s timeout)", "Install the Docker Compose plugin; verify with `docker compose version`")
+	add("docker", true, err == nil, "Docker 執行檔是否存在", "開啟 https://docs.docker.com/get-docker/ 安裝 Docker，然後執行 `docker version`")
+	add("docker_daemon", true, doctorExec(ctx, "docker", "info", "--format", "{{.ServerVersion}}") == nil, "Docker 常駐程式回應（3 秒逾時）", "開啟 Docker Desktop，或執行 `sudo systemctl start docker`，再重試 `decepticon doctor`")
+	add("compose", true, doctorExec(ctx, "docker", "compose", "version") == nil, "Docker Compose V2 回應（3 秒逾時）", "安裝 Docker Compose 外掛，並用 `docker compose version` 確認")
 	env, configErr := config.LoadEnv(config.EnvPath())
 	_, composeErr := os.Stat(filepath.Join(config.DecepticonHome(), "docker-compose.yml"))
-	add("config", true, configErr == nil && composeErr == nil, "Readable configuration and Compose file presence", "Run `decepticon onboard` for a new install; for existing installs inspect `decepticon status` before changing configuration")
+	add("config", true, configErr == nil && composeErr == nil, "設定檔可讀且存在 Compose 檔案", "全新安裝請執行 `decepticon onboard`；既有安裝請先用 `decepticon status` 檢視再變更設定")
 	authOK := configErr == nil && config.ValidateAuth(env) == nil
-	add("auth", true, authOK, "Configured authentication method (presence only; provider login validity is not tested)", "Run `decepticon onboard` to configure an authentication method")
+	add("auth", true, authOK, "已設定的驗證方式（僅檢查是否設定，不驗證供應商登入是否有效）", "執行 `decepticon onboard` 設定驗證方式")
 	client := &http.Client{Timeout: 3 * time.Second, CheckRedirect: func(_ *http.Request, _ []*http.Request) error { return http.ErrUseLastResponse }}
 	graphCtx, cancelGraph := context.WithTimeout(ctx, 3*time.Second)
 	graphErr := health.ProbeLangGraph(graphCtx, env)
 	cancelGraph()
-	graphDetail := "Host LangGraph HTTP and decepticon assistant ready"
+	graphDetail := "主機端 LangGraph HTTP 與 decepticon assistant 已就緒"
 	if graphErr != nil {
 		graphDetail = graphErr.Error()
 	}
-	add("langgraph", true, graphErr == nil, graphDetail, "Inspect LANGGRAPH_PORT and Docker published ports; compare host connectivity with container health using `decepticon logs langgraph`; retry `decepticon start --no-update`")
+	add("langgraph", true, graphErr == nil, graphDetail, "檢查 LANGGRAPH_PORT 與 Docker 對外連接埠；用 `decepticon logs langgraph` 對照容器健康狀態；再重試 `decepticon start --no-update`")
 	socket := infracontrol.HostSocketPath()
 	info, socketErr := os.Stat(socket)
-	add("opscontrol_socket", false, socketErr == nil && info.Mode()&os.ModeSocket != 0, "Opscontrol Unix socket presence", "Run `decepticon infracontrol status`; start with `decepticon start --no-update`")
+	add("opscontrol_socket", false, socketErr == nil && info.Mode()&os.ModeSocket != 0, "Opscontrol Unix socket 是否存在", "執行 `decepticon infracontrol status`；用 `decepticon start --no-update` 啟動")
 	transport := &http.Transport{DialContext: func(ctx context.Context, _, _ string) (net.Conn, error) {
 		return (&net.Dialer{Timeout: 3 * time.Second}).DialContext(ctx, "unix", socket)
 	}}
 	defer transport.CloseIdleConnections()
 	opsClient := &http.Client{Transport: transport, Timeout: 3 * time.Second}
-	add("opscontrol", false, doctorHTTP(ctx, opsClient, "http://opscontrol/v1/health"), "Opscontrol daemon health response", "Run `decepticon infracontrol status`; inspect `decepticon logs`")
+	add("opscontrol", false, doctorHTTP(ctx, opsClient, "http://opscontrol/v1/health"), "Opscontrol 常駐程式健康回應", "執行 `decepticon infracontrol status`；並查看 `decepticon logs`")
 	for _, component := range []struct{ name, key, fallback string }{{"blue_sensor", "BLUE_SENSOR_URL", "http://127.0.0.1:18081"}, {"blue_monitor", "BLUE_MONITOR_URL", "http://127.0.0.1:18085"}} {
 		endpoint := config.Get(env, component.key, component.fallback)
-		detail := "No host endpoint configured; monitoring status unknown"
+		detail := "未設定主機端端點；監控狀態未知"
 		ok := false
 		if endpoint != "" {
 			ok = doctorHTTP(ctx, client, endpoint+"/metrics")
-			detail = "Configured host endpoint health response"
+			detail = "已設定主機端端點的健康回應"
 		}
-		add(component.name, false, ok, detail, "Run `decepticon logs`; configure a host-reachable "+component.key+" and retry `decepticon doctor`")
+		add(component.name, false, ok, detail, "執行 `decepticon logs`；設定一個主機可連的 "+component.key+" 後重試 `decepticon doctor`")
 	}
 	return report
 }
