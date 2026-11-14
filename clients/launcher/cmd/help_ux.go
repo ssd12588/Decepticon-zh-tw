@@ -27,9 +27,9 @@ func validateRootArgs(args []string) error {
 		}
 	}
 	if bestName != "" && bestDistance <= 3 {
-		return fmt.Errorf("unknown command %q; did you mean %q? Run 'decepticon help' for the command list", word, bestName)
+		return fmt.Errorf("未知的指令 %q；你是不是想用 %q？執行 'decepticon help' 可查看指令列表", word, bestName)
 	}
-	return fmt.Errorf("unexpected arguments; use --resume=THREAD_ID, --resume to pick a session, or --continue")
+	return fmt.Errorf("無法辨識的參數；請改用 --resume=THREAD_ID、--resume 選擇工作階段，或 --continue")
 }
 
 func editDistance(a, b string) int {

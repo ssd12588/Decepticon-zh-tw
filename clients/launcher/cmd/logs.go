@@ -15,18 +15,17 @@ var documentedLogServices = []string{"langgraph", "litellm", "postgres", "neo4j"
 
 var logsCmd = &cobra.Command{
 	Use:   "logs [service]",
-	Short: "Follow service logs, or replay an engagement transcript",
-	Long: `Two modes:
+	Short: "追蹤服務日誌，或重播授權測試任務的對話紀錄",
+	Long: `兩種模式：
 
-Service mode (default): follow logs for one service in the current Compose
-stack. The default service is langgraph. Documented services: langgraph,
-litellm, postgres, neo4j, sandbox. Additional stack services (such as
-cli or c2-sliver) are accepted when present in Compose configuration.
+服務模式（預設）：追蹤目前 Compose 堆疊中某個服務的日誌。
+預設服務為 langgraph。已記載的服務：langgraph、litellm、postgres、
+neo4j、sandbox。其他堆疊服務（例如 cli 或 c2-sliver）只要存在於
+Compose 設定中也可接受。
 
-Engagement mode (--engagement): replay the conversation transcript of a
-(possibly background) engagement from its LangGraph thread state — the same
-surface the MCP decepticon_transcript tool reads. Read-only; the engagement
-does not need to be running.`,
+任務模式（--engagement）：從 LangGraph 對話串狀態重播某個授權測試
+任務（可能為背景執行）的對話紀錄，也就是 MCP decepticon_transcript
+工具讀取的同一份內容。唯讀；該任務不需要正在執行。`,
 	Example: `  decepticon logs
   decepticon logs litellm
   decepticon logs cli
@@ -51,7 +50,7 @@ does not need to be running.`,
 		}
 		if engagementName != "" {
 			if len(args) > 0 {
-				return fmt.Errorf("a service argument and --engagement are mutually exclusive")
+				return fmt.Errorf("服務參數與 --engagement 不能同時使用")
 			}
 			return runEngagementTranscript(cmd, engagementName)
 		}
@@ -63,7 +62,7 @@ does not need to be running.`,
 		if !isDocumentedLogService(service) {
 			names, err := compose.New().ServiceNames()
 			if err != nil {
-				return fmt.Errorf("validate service %q: %w", service, err)
+				return fmt.Errorf("驗證服務 %q 失敗：%w", service, err)
 			}
 			found := false
 			for _, name := range names {
@@ -73,7 +72,7 @@ does not need to be running.`,
 				}
 			}
 			if !found {
-				return fmt.Errorf("unknown service %q; documented services: %s", service, strings.Join(documentedLogServices, ", "))
+				return fmt.Errorf("未知的服務 %q；已記載的服務：%s", service, strings.Join(documentedLogServices, "、"))
 			}
 		}
 		return compose.New().Logs(service)
@@ -105,7 +104,7 @@ func runEngagementTranscript(cmd *cobra.Command, target string) error {
 	if err != nil {
 		return err
 	}
-	cmd.Printf("engagement %s (thread %s) — %d message(s), plan revision %d\n\n",
+	cmd.Printf("授權測試任務 %s（對話串 %s）—— %d 則訊息，計畫修訂版 %d\n\n",
 		state.EngagementName, state.ThreadID, len(state.Messages), state.PlanRevision)
 	for _, message := range engagement.ReplayLimit(state.Messages, limit) {
 		cmd.Printf("[%s] %s\n", message.Role, strings.ReplaceAll(message.Content, "\n", "\n  "))
@@ -137,8 +136,8 @@ func isDocumentedLogService(name string) bool {
 }
 
 func init() {
-	logsCmd.Flags().String("engagement", "", "Replay an engagement's transcript (name or thread id) instead of following service logs")
-	logsCmd.Flags().Int("limit", 50, "Print the trailing N messages (engagement mode)")
+	logsCmd.Flags().String("engagement", "", "重播授權測試任務的對話紀錄（名稱或對話串 ID），而不追蹤服務日誌")
+	logsCmd.Flags().Int("limit", 50, "輸出最後 N 則訊息（任務模式）")
 	_ = logsCmd.Flags().SetAnnotation("engagement", cobra.BashCompFilenameExt, []string{""})
 	rootCmd.AddCommand(logsCmd)
 }

@@ -9,16 +9,16 @@ import (
 
 var stopCmd = &cobra.Command{
 	Use:   "stop",
-	Short: "Stop all Decepticon services",
-	Long: `Stop every Decepticon service, including the opscontrol daemon.
+	Short: "停止所有 Decepticon 服務",
+	Long: `停止所有 Decepticon 服務，包含 opscontrol 常駐程式。
 
-Stops and removes all Compose containers across every workload
-profile, then tears down the opscontrol daemon. Conversations and
-workspace data are kept; only the running services are stopped.`,
-	Example: `  decepticon stop    Stop all Decepticon services and the daemon`,
+會停止並移除所有工作負載設定檔中的 Compose 容器，然後關閉
+opscontrol 常駐程式。對話與工作區資料都會保留，只停止正在
+執行的服務。`,
+	Example: `  decepticon stop    停止所有 Decepticon 服務與常駐程式`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		c := compose.New()
-		ui.Info("Stopping Decepticon services...")
+		ui.Info("正在停止 Decepticon 服務…")
 		c.RemoveOrphanedCLI()
 		// Clear legacy root-level scratch/session buffers before tearing the
 		// stack down. Current runs keep these under engagement workspaces.
@@ -30,9 +30,9 @@ workspace data are kept; only the running services are stopped.`,
 		// workload it owned has already been removed by `compose down`.
 		// Non-fatal: a never-started daemon is a no-op here.
 		if err := infracontrol.Stop(); err != nil {
-			ui.Warning("infracontrol stop: " + err.Error())
+			ui.Warning("infracontrol 停止失敗：" + err.Error())
 		}
-		ui.Success("All services stopped")
+		ui.Success("所有服務已停止")
 		return nil
 	},
 }

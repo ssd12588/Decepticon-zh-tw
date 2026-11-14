@@ -15,25 +15,25 @@ var version = "dev"
 var rootCmd = &cobra.Command{
 	Use:   "decepticon",
 	Args:  cobra.ArbitraryArgs,
-	Short: "Decepticon — Autonomous Hacking Agent for Red Team",
-	Long: ui.RenderBanner() + "\n" + ui.Dim.Render("Autonomous Hacking Agent for Red Team") + `
+	Short: "Decepticon —— 紅隊自主駭客代理",
+	Long: ui.RenderBanner() + "\n" + ui.Dim.Render("紅隊自主駭客代理") + `
 
-Start an authorized red-team session:
-  decepticon                        Boot services and open the conversation
-                                    (first launch runs the onboard wizard)
-  decepticon --continue             Continue the latest session
-  decepticon --resume               Open the interactive session picker
-  decepticon --resume=<thread-id>   Resume a specific thread
+啟動授權紅隊工作階段：
+  decepticon                        啟動服務並開啟對話
+                                    （首次啟動會執行 onboard 初始化精靈）
+  decepticon --continue             接續最近一次工作階段
+  decepticon --resume               開啟互動式工作階段選擇器
+  decepticon --resume=<thread-id>   接續指定的對話串
 
-Manage the stack and installation:
-  decepticon status                 Show running services (--json for scripts)
-  decepticon logs langgraph         Follow the agent service logs
-  decepticon doctor                 Diagnose the installation (--json for CI)
-  decepticon update                 Check for updates and apply them
-  decepticon stop                   Stop all services (a CLI exit keeps them
-                                    running so the next start is fast)
+管理服務堆疊與安裝：
+  decepticon status                 顯示執行中的服務（--json 供腳本使用）
+  decepticon logs langgraph         追蹤代理服務日誌
+  decepticon doctor                 診斷安裝狀態（--json 供 CI 使用）
+  decepticon update                 檢查並套用更新
+  decepticon stop                   停止所有服務（離開 CLI 後服務仍會繼續執行，
+                                    讓下次啟動更快）
 
-Run 'decepticon <command> --help' for details on a command.`,
+執行 'decepticon <command> --help' 可查看單一指令的詳細說明。`,
 	CompletionOptions: cobra.CompletionOptions{
 		HiddenDefaultCmd: true,
 	},
@@ -67,8 +67,8 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.PersistentFlags().Bool("no-alt-screen", false, "Use native terminal scrollback instead of the fullscreen conversation")
-	rootCmd.PersistentFlags().BoolVar(&ui.DisableMouse, "no-mouse", false, "Disable terminal mouse capture")
+	rootCmd.PersistentFlags().Bool("no-alt-screen", false, "使用終端機原生捲動，而不使用全螢幕對話介面")
+	rootCmd.PersistentFlags().BoolVar(&ui.DisableMouse, "no-mouse", false, "停用終端機滑鼠擷取")
 	rootCmd.Version = version
 	rootCmd.SetVersionTemplate(fmt.Sprintf("Decepticon %s\n", version))
 }

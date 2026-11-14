@@ -9,8 +9,8 @@ import (
 
 var statusCmd = &cobra.Command{
 	Use:     "status",
-	Short:   "Show Decepticon service status",
-	Long:    "Show services in the current Decepticon Compose stack. Use --json for a JSON array suitable for scripts, including [] when no services are running.",
+	Short:   "顯示 Decepticon 服務狀態",
+	Long:    "顯示目前 Decepticon Compose 堆疊中的服務。加上 --json 會輸出適合腳本處理的 JSON 陣列，沒有服務在執行時輸出 []。",
 	Example: "  decepticon status\n  decepticon status --json",
 	Args:    cobra.NoArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
@@ -31,6 +31,6 @@ var statusCmd = &cobra.Command{
 }
 
 func init() {
-	statusCmd.Flags().Bool("json", false, "Print service rows as a JSON array")
+	statusCmd.Flags().Bool("json", false, "以 JSON 陣列輸出服務列表")
 	rootCmd.AddCommand(statusCmd)
 }

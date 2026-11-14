@@ -12,30 +12,29 @@ import (
 
 var mcpCmd = &cobra.Command{
 	Use:   "mcp",
-	Short: "Connect coding agents to a running Decepticon instance",
-	Long: `Expose Decepticon's MCP tools to coding agents over the Model
-Context Protocol (MCP).
+	Short: "讓程式開發代理連接執行中的 Decepticon",
+	Long: `透過 Model Context Protocol（MCP）把 Decepticon 的 MCP 工具提供給
+程式開發代理使用。
 
-Start Decepticon first ('decepticon start'), then point your coding
-agent at this MCP server so it can drive a running Decepticon
-instance: check status and health, read logs, and follow engagement
-workflows.`,
-	Example: `  decepticon mcp serve             Serve Decepticon MCP tools over stdio
+請先啟動 Decepticon（'decepticon start'），再讓你的程式開發代理
+指向這個 MCP 伺服器，即可操作執行中的 Decepticon：查看狀態與健康
+檢查、讀取日誌，並依授權測試任務流程作業。`,
+	Example: `  decepticon mcp serve             以 stdio 提供 Decepticon MCP 工具
 
-  # Register with Claude Code (run after 'decepticon start'):
+  # 註冊到 Claude Code（請先執行 'decepticon start'）：
   claude mcp add decepticon -- decepticon mcp serve`,
 }
 
 var mcpServeCmd = &cobra.Command{
 	Use:   "serve",
-	Short: "Serve Decepticon MCP tools over stdio",
-	Long:  "Serve Decepticon MCP tools over stdio for Claude Code, Codex, or another MCP client. Start Decepticon first.",
+	Short: "以 stdio 提供 Decepticon MCP 工具",
+	Long:  "以 stdio 對 Claude Code、Codex 或其他 MCP 用戶端提供 Decepticon MCP 工具。請先啟動 Decepticon。",
 	Args:  cobra.NoArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		home := config.DecepticonHome()
 		for _, name := range []string{"docker-compose.yml", ".env"} {
 			if _, err := os.Stat(filepath.Join(home, name)); err != nil {
-				return fmt.Errorf("Decepticon is not installed at %s; run decepticon onboard first: %w", home, err)
+				return fmt.Errorf("Decepticon 尚未安裝於 %s；請先執行 decepticon onboard：%w", home, err)
 			}
 		}
 		return compose.New().RunMCPStdio()

@@ -18,28 +18,26 @@ var (
 
 var updateCmd = &cobra.Command{
 	Use:   "update",
-	Short: "Check for updates and apply them",
-	Long: `Check GitHub for a newer Decepticon release and apply it.
+	Short: "檢查並套用更新",
+	Long: `到 GitHub 檢查是否有較新的 Decepticon 發行版並套用。
 
-Applies the new launcher binary, re-syncs configuration files
-(docker-compose.yml, litellm config, etc.) and pulls updated Docker
-images. With --force it refreshes configuration files and Docker
-images even when the version is unchanged.
+會更新啟動器執行檔、重新同步設定檔（docker-compose.yml、
+litellm 設定等）並拉取更新後的 Docker 映像。加上 --force 時，
+即使版本沒有變更也會重新整理設定檔與 Docker 映像。
 
-The channel defaults to DECEPTICON_CHANNEL in .env (falling back to
-latest); --channel overrides it for this run only. Set AUTO_UPDATE in
-~/.decepticon/.env or use --no-update to control the launch-time
-update check.`,
-	Example: `  decepticon update                Check for updates and apply them
-  decepticon update --force        Re-sync config files and Docker images
+更新通道預設讀取 .env 的 DECEPTICON_CHANNEL（找不到時用
+latest）；--channel 只覆寫本次執行。啟動時的更新檢查可用
+~/.decepticon/.env 的 AUTO_UPDATE 控制，或加上 --no-update 停用。`,
+	Example: `  decepticon update                檢查並套用更新
+  decepticon update --force        重新同步設定檔與 Docker 映像
   decepticon update --channel stable
-                                   Track the stable (soaked) channel for this run`,
+                                   本次執行改追 stable（已浸泡）通道`,
 	RunE: runUpdate,
 }
 
 func init() {
-	updateCmd.Flags().BoolVarP(&forceUpdate, "force", "f", false, "Refresh config files and Docker images even if version unchanged")
-	updateCmd.Flags().StringVar(&updateChannel, "channel", "", "Update channel for this run: stable (soaked final) or latest (newest final). Default: DECEPTICON_CHANNEL in .env, else latest")
+	updateCmd.Flags().BoolVarP(&forceUpdate, "force", "f", false, "即使版本未變更，也重新整理設定檔與 Docker 映像")
+	updateCmd.Flags().StringVar(&updateChannel, "channel", "", "本次執行的更新通道：stable（已浸泡的正式版）或 latest（最新的正式版）。預設讀取 .env 的 DECEPTICON_CHANNEL，否則為 latest")
 	rootCmd.AddCommand(updateCmd)
 }
 
@@ -57,23 +55,23 @@ func runUpdate(cmd *cobra.Command, args []string) error {
 	}
 	ch := updater.ResolveChannel(rawChannel)
 
-	ui.Info(fmt.Sprintf("Checking for updates (%s channel)...", ch))
+	ui.Info(fmt.Sprintf("正在檢查更新（%s 通道）…", ch))
 
 	release, err := updater.FetchRelease(ch)
 	if err != nil {
-		return fmt.Errorf("check updates: %w", err)
+		return fmt.Errorf("檢查更新失敗：%w", err)
 	}
 
 	hasUpdate := updater.CompareVersions(version, release.TagName)
 	if !hasUpdate && !forceUpdate {
-		ui.Success(fmt.Sprintf("Already up to date (%s)", version))
+		ui.Success(fmt.Sprintf("已是最新版本（%s）", version))
 		return nil
 	}
 
 	if hasUpdate {
-		ui.Info(fmt.Sprintf("Update available: %s → %s", version, release.TagName))
+		ui.Info(fmt.Sprintf("有新版本可用：%s → %s", version, release.TagName))
 	} else {
-		ui.Info("Refreshing configuration files and Docker images...")
+		ui.Info("正在重新整理設定檔與 Docker 映像…")
 	}
 
 	ref := release.TagName
@@ -90,7 +88,7 @@ func runUpdate(cmd *cobra.Command, args []string) error {
 	} else {
 		// --force: re-sync config + re-pull images without bumping the
 		// binary (already on release.TagName).
-		ui.Info("Syncing configuration files...")
+		ui.Info("正在同步設定檔…")
 		// Mirror ApplyUpdate's release/branch split: pass the Release
 		// through when ref tracks the tag so the manifest verifies, nil
 		// when DECEPTICON_BRANCH is overriding the ref (branch mode).
@@ -99,17 +97,17 @@ func runUpdate(cmd *cobra.Command, args []string) error {
 			syncRelease = nil
 		}
 		if err := updater.SyncConfigFiles(ref, syncRelease); err != nil {
-			ui.Warning("Config sync: " + err.Error())
+			ui.Warning("設定檔同步失敗：" + err.Error())
 		}
 		c := compose.New()
 		targetVersion := strings.TrimPrefix(release.TagName, "v")
-		ui.Info("Pulling Docker images (" + targetVersion + ")...")
+		ui.Info("正在拉取 Docker 映像（" + targetVersion + "）…")
 		if err := c.Pull(targetVersion); err != nil {
-			ui.Warning("Image pull: " + err.Error())
+			ui.Warning("映像拉取失敗：" + err.Error())
 		}
 	}
 
-	ui.Success("Update complete")
-	ui.DimText("Restart Decepticon to use the new version")
+	ui.Success("更新完成")
+	ui.DimText("請重新啟動 Decepticon 以使用新版本")
 	return nil
 }

@@ -9,7 +9,7 @@ func TestRootArgumentErrorsBeforeBoot(t *testing.T) {
 	old := resumeThread
 	t.Cleanup(func() { resumeThread = old })
 	resumeThread = ""
-	if err := validateRootArgs([]string{"startatd"}); err == nil || !strings.Contains(err.Error(), `did you mean "start"`) {
+	if err := validateRootArgs([]string{"startatd"}); err == nil || !strings.Contains(err.Error(), `你是不是想用 "start"`) {
 		t.Fatalf("typo: %v", err)
 	}
 	if err := validateRootArgs([]string{"arbitrary-thread"}); err == nil || !strings.Contains(err.Error(), "--resume=THREAD_ID") {
@@ -44,7 +44,7 @@ func TestRootArgumentSuggestionRejectsDistantTypos(t *testing.T) {
 	// When the actual startup validator classifies the argument.
 	err := validateRootArgs([]string{"staaaaart"})
 	// Then it retains resume guidance without an overly distant command suggestion.
-	if err == nil || strings.Contains(err.Error(), "did you mean") || !strings.Contains(err.Error(), "--resume=THREAD_ID") {
+	if err == nil || strings.Contains(err.Error(), "你是不是想用") || !strings.Contains(err.Error(), "--resume=THREAD_ID") {
 		t.Fatalf("distant typo: %v", err)
 	}
 }
