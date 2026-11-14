@@ -29,6 +29,9 @@
 | 代理開發規範 | `AGENTS.md` | ✅ |
 | 術語表 | `docs-zh/glossary.md` | ✅ |
 | 中文文件索引 | `docs-zh/README.md` | ✅ |
+| 中文入門包（上手／排錯／交接） | `docs-zh/QUICKSTART.md`、`TROUBLESHOOTING.md`、`PROJECT-STATUS.md` | ✅ |
+| **Ink 對話介面（TUI）** | `clients/cli/src/**`（40 檔、227 處字面量） | ✅ |
+| 漢化工具（字面量對照表＋腳本） | `tools/i18n/tui_zh.py`、`tui_zh_map.py`、`tests_zh.py` | ✅ |
 
 **刻意保持英文**（改了會影響 AI 判斷或直接弄壞程式）：
 
@@ -48,7 +51,9 @@
 | 實際輸出 | `decepticon --help` | ✅ 繁體中文正常 |
 | 實際輸出 | `decepticon doctor` | ✅ 繁體中文（含復原方式） |
 | 全量 Go 測試 | `go test ./...` | ⚠️ `internal/infracontrol` 1 項失敗，見下方已知限制 |
-| TUI／Python CLI／`docs/` | — | ⬜ 尚未開始 |
+| Ink 建置 | `npx tsc`（clients/cli） | ✅ 無錯誤 |
+| Ink 測試 | `npx vitest run` | ✅ 286 passed／8 failed，8 項皆為 Windows 環境限制（見下） |
+| Python CLI／`docs/` | — | ⬜ 尚未開始 |
 
 ---
 
@@ -60,6 +65,11 @@
 2. **本機 clone 是 shallow**：為了快速勘察用 `--depth 1` 取得。要在本機做
    `git merge upstream/main` 之前，請先 `git fetch --unshallow upstream`。
 3. **`docs/` 179 篇尚未漢化**：目前只需漢化的部分已完成，全量文件翻譯是下一階段。
+4. **Windows 上 8 個 Ink 測試失敗**（與漢化無關，上游在 Windows 同樣失敗）：
+   - `mode & 0o777` 應為 `0o600`：NTFS 不支援 POSIX 檔案權限（`exportSession`、`scope`）
+   - `symlink` 回 `EPERM`：需 Developer Mode 或系統管理員權限（`planMode`、`scope`）
+   - `/srv/blue-root/blue.json`：`path.join` 在 Windows 產生反斜線（`blue`）
+   - `composer` 的可執行檔路徑含空白：Windows 執行腳本行為不同
 
 ---
 

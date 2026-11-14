@@ -31,14 +31,14 @@ const TOOL_DISPLAY: Record<string, string> = {
   execute: "Execute",
   write_todos: "Todos",
   ask_user_question: "Ask",
-  complete_engagement_planning: "Plan complete",
+  complete_engagement_planning: "計畫完成",
   // Skillogy 3-tool surface (ADR-0008 / v0.2.2). load_skill is the
   // expensive full-text fetch; find_skill / traverse are the cheap
   // discovery primitives. Label all three so the activity stream stays
   // legible during the skill-retrieval phase.
   load_skill: "Skill",
-  find_skill: "Find skill",
-  traverse: "Traverse skills",
+  find_skill: "尋找技能",
+  traverse: "瀏覽技能",
 };
 
 // ── Tool call header ──────────────────────────────────────────────
@@ -152,7 +152,7 @@ function ResultContent({
     <>
       {envelope && (
         <Text color={PALETTE.muted}>
-          {"  ⚠ untrusted output"}{envelope.origin ? ` · ${envelope.origin}` : ""}{envelope.risk ? ` · risk=${envelope.risk}` : ""}
+          {"  ⚠ 未經信任的輸出"}{envelope.origin ? ` · ${envelope.origin}` : ""}{envelope.risk ? ` · risk=${envelope.risk}` : ""}
         </Text>
       )}
       {display.map((line, i) => (
@@ -211,7 +211,7 @@ export const ToolCallMessage = React.memo(function ToolCallMessage({
         ? from.split("/").slice(-2, -1)[0] ?? from
         : from;
     })();
-    const label = event.toolName === "find_skill" ? "Find skill" : "Traverse skills";
+    const label = event.toolName === "find_skill" ? "尋找技能" : "瀏覽技能";
     const dotColor = event.status === "error" ? PALETTE.error : PALETTE.success;
     return (
       <Box flexDirection="column" marginTop={1}>

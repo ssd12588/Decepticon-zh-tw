@@ -4,7 +4,7 @@ import { PALETTE } from "../../utils/theme.js";
  * ErrorMessage — structured error display with truncation.
  *
  * Claude Code pattern: MAX_API_ERROR_CHARS = 1000, head/tail split,
- * red color coding, "(ctrl+o to expand)" hint on truncation.
+ * red color coding, "（ctrl+o 展開）" hint on truncation.
  * When the tool result is a structured error (from tools/errors.py),
  * cause and recovery are displayed separately for readability.
  * Esc dismisses the banner when onDismiss is provided.
@@ -81,7 +81,7 @@ export const ErrorMessage = React.memo(function ErrorMessage({
         {structured.recovery && (
           <Text color={PALETTE.text} dimColor wrap="wrap">{`  Recovery: ${structured.recovery}`}</Text>
         )}
-        {onDismiss && <Text color={PALETTE.text} dimColor>{"  esc to dismiss"}</Text>}
+        {onDismiss && <Text color={PALETTE.text} dimColor>{"  esc：關閉"}</Text>}
       </Box>
     );
   }
@@ -92,7 +92,7 @@ export const ErrorMessage = React.memo(function ErrorMessage({
         <Text color={PALETTE.error} bold>{"error> "}</Text>
         <Text color={PALETTE.error} wrap="wrap">{display}</Text>
       </Text>
-      {onDismiss && <Text color={PALETTE.text} dimColor>{isTruncated ? "ctrl+o to expand · esc to dismiss" : "esc to dismiss"}</Text>}
+      {onDismiss && <Text color={PALETTE.text} dimColor>{isTruncated ? "ctrl+o 展開 · esc 關閉" : "esc to dismiss"}</Text>}
       {isTruncated && <CtrlOToExpand />}
     </Box>
   );

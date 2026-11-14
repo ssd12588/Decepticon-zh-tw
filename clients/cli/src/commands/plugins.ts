@@ -45,7 +45,7 @@ function apiBase(): string {
 }
 
 function formatList(data: ListResponse): string {
-  const lines: string[] = ["Available plugin bundles:", ""];
+  const lines: string[] = ["可用的外掛組合：", ""];
   for (const b of data.bundles) {
     const mark = b.enabled ? "[on] " : "[off]";
     lines.push(`  ${mark} ${b.name}  (${b.graphs.length} graphs)`);
@@ -55,14 +55,14 @@ function formatList(data: ListResponse): string {
   }
   lines.push("");
   lines.push("Usage:");
-  lines.push("  /plugins enable <name>    Activate the bundle (runtime, no restart)");
-  lines.push("  /plugins disable <name>   Drop the bundle");
-  lines.push("  /agent <orchestrator>     Switch active orchestrator after enabling");
+  lines.push("  /plugins enable <name>    啟用該組合（執行期生效，免重啟）");
+  lines.push("  /plugins disable <name>   卸載該組合");
+  lines.push("  /agent <orchestrator>     啟用後切換使用中的協同器");
   lines.push("");
   lines.push(
-    "Activations are runtime-only. To persist across `decepticon restart`,",
+    "啟用只在此次執行期有效。若要跨 `decepticon restart` 保留，",
   );
-  lines.push("set DECEPTICON_PLUGINS in ~/.decepticon/.env (e.g. standard,plugins).");
+  lines.push("請在 ~/.decepticon/.env 設定 DECEPTICON_PLUGINS（例：standard,plugins）。");
   return lines.join("\n");
 }
 
@@ -84,7 +84,7 @@ async function getJson<T>(url: string, init?: RequestInit): Promise<T> {
 
 const plugins: Command = {
   name: "plugins",
-  description: "List or toggle agent plugin bundles",
+  description: "列出或切換代理外掛組合",
   argumentHint: "[enable|disable <bundle>]",
   aliases: ["plugin", "플러그인"],
   execute(args, ctx) {
@@ -100,7 +100,7 @@ const plugins: Command = {
         } catch (err) {
           ctx.addSystemEvent(
             `Could not reach plugin bundles API at ${apiBase()}: ${err instanceof Error ? err.message : String(err)}\n` +
-              "Is the decepticon stack running?",
+              "decepticon 服務堆疊有在執行嗎？",
           );
         }
       })();
@@ -139,7 +139,7 @@ const plugins: Command = {
         }
         if (verb === "enabled" && data.bundle === "plugins") {
           lines.push("");
-          lines.push("Tip: switch to the new orchestrator with `/agent vulnresearch`.");
+          lines.push("提示：用 `/agent vulnresearch` 切換到新的協同器。");
         }
         ctx.addSystemEvent(lines.join("\n"));
       } catch (err) {

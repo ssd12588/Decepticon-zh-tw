@@ -21,9 +21,9 @@ const LEGACY_SCOPE = JSON.stringify({
 
 describe("Red scope gate", () => {
   afterEach(() => vi.unstubAllEnvs());
-  it("refuses Red outside an engagement workspace", async () => {
+  it("refuses Red outside an 授權測試任務工作區", async () => {
     vi.stubEnv("DECEPTICON_ENGAGEMENT", "");
-    await expect(assertRedApproved()).rejects.toThrow("engagement workspace");
+    await expect(assertRedApproved()).rejects.toThrow("授權測試任務工作區");
   });
 
   it("refuses a symlinked or non-regular scope path", async () => {
@@ -64,7 +64,7 @@ describe("Red scope gate", () => {
     }));
     vi.stubEnv("DECEPTICON_ENGAGEMENT", "test");
     vi.stubEnv("DECEPTICON_WORKSPACE_PATH", root);
-    await expect(assertRedApproved()).rejects.toThrow("no enforced machine block");
+    await expect(assertRedApproved()).rejects.toThrow("強制執行用的 machine 區塊");
   });
 
   it.each(["enforce", "audit", "warn"])("accepts legacy mode %s because runtime enforcement is unconditional", async (mode) => {
@@ -85,7 +85,7 @@ describe("Red scope gate", () => {
     await writeFile(path.join(root, "plan", "roe.json"), JSON.stringify({ machine_enforcement: block }));
     vi.stubEnv("DECEPTICON_ENGAGEMENT", "test");
     vi.stubEnv("DECEPTICON_WORKSPACE_PATH", root);
-    await expect(assertRedApproved()).rejects.toThrow("no enforced machine block");
+    await expect(assertRedApproved()).rejects.toThrow("強制執行用的 machine 區塊");
   });
 
   it("refuses an unparsable scope document with a clear message", async () => {
@@ -94,6 +94,6 @@ describe("Red scope gate", () => {
     await writeFile(path.join(root, "plan", "roe.json"), "not json");
     vi.stubEnv("DECEPTICON_ENGAGEMENT", "test");
     vi.stubEnv("DECEPTICON_WORKSPACE_PATH", root);
-    await expect(assertRedApproved()).rejects.toThrow("not a valid scope document");
+    await expect(assertRedApproved()).rejects.toThrow("不是有效的範圍文件");
   });
 });

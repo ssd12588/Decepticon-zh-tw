@@ -30,10 +30,10 @@ export function SessionFooter({ assistantId = "decepticon", activeAgent, engagem
     {runtime && <Box flexWrap="wrap">
       <Action label={runtime.servedModel ? "Served" : "Route"}>{runtime.servedModel || runtime.route}</Action>
       <Action label="Effort">{runtime.effort} (requested)</Action>
-      <Action label="Context">{runtime.contextTokens === null ? "not reported" : runtime.contextWindow ? `${runtime.contextTokens.toLocaleString("en-US")}/${runtime.contextWindow.toLocaleString("en-US")} (${Math.round(runtime.contextTokens / runtime.contextWindow * 100)}%)` : `${runtime.estimated ? "≈" : ""}${runtime.contextTokens.toLocaleString("en-US")}`}</Action>
+      <Action label="Context">{runtime.contextTokens === null ? "未回報" : runtime.contextWindow ? `${runtime.contextTokens.toLocaleString("en-US")}/${runtime.contextWindow.toLocaleString("en-US")} (${Math.round(runtime.contextTokens / runtime.contextWindow * 100)}%)` : `${runtime.estimated ? "≈" : ""}${runtime.contextTokens.toLocaleString("en-US")}`}</Action>
       {runtime.fallbackAttempt > 0 && <Action label="Fallback">{runtime.fallbackAttempt}</Action>}
     </Box>}
     {budget && <Text color={PALETTE.text}>Budget <Text color={PALETTE.text} bold>{budget.pct}%</Text> · ${budget.spent} / ${budget.cap}</Text>}
-    <Text color={PALETTE.muted} wrap="truncate-end">{working ? "Esc / Ctrl+C pause · Ctrl+C twice cancel · /queue edit" : runState === "paused" ? "Enter send a follow-up to continue · /resume sessions · Ctrl+C cancel" : "Enter send · Shift+Enter newline · /resume sessions"}{" · ? shortcuts"}</Text>
+    <Text color={PALETTE.muted} wrap="truncate-end">{working ? "Esc／Ctrl+C 暫停 · 連按兩次 Ctrl+C 取消 · /queue 編輯" : runState === "paused" ? "Enter 送出後續訊息以繼續 · /resume 工作階段 · Ctrl+C 取消" : "Enter 送出 · Shift+Enter 換行 · /resume 工作階段"}{" · ? shortcuts"}</Text>
   </Box>;
 }

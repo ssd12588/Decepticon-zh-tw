@@ -21,7 +21,7 @@ describe("ErrorMessage — real Ink rendering", () => {
     expect(frame).toContain("[Bash]");
     expect(frame).toContain("sandbox HTTP daemon not responding");
     expect(frame).toContain("Recovery: Run decepticon doctor --deep");
-    expect(frame).toContain("esc to dismiss");
+    expect(frame).toContain("esc：關閉");
     rendered.unmount();
   });
 

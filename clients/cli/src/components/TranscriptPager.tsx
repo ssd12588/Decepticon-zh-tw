@@ -45,7 +45,7 @@ export function TranscriptPager({ events, modalActive }: { readonly events: read
   }, { isActive: !modalActive });
   return <Box flexDirection="column">
     <Text color={PALETTE.text} bold>TRANSCRIPT · {lines.length ? start + 1 : 0}–{Math.min(start + pageSize, lines.length)} / {lines.length}</Text>
-    <Text color={PALETTE.text} dimColor>PgUp/PgDn scroll · /commands · Esc closes</Text>
+    <Text color={PALETTE.text} dimColor>PgUp/PgDn 捲動 · /commands · Esc 關閉</Text>
     <Box height={pageSize} overflowY="hidden"><Text color={PALETTE.text}>{lines.slice(start, start + pageSize).join("\n")}</Text></Box>
   </Box>;
 }

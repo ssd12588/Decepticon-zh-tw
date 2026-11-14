@@ -7,6 +7,6 @@ export async function rolePurpose(assistant: string, apiUrl: string): Promise<Ro
   if (typeof result !== "object" || result === null || !("role" in result) || result.role !== assistant || !("purpose" in result)) throw new Error("Invalid assistant purpose response.");
   switch (result.purpose) {
     case "execution": case "planning": case "observation": return result.purpose;
-    default: throw new Error("Unknown assistant purpose; execution is blocked.");
+    default: throw new Error("未知的 assistant 用途；已阻擋執行。");
   }
 }

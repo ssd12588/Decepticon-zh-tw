@@ -32,7 +32,7 @@ export function ConversationViewport({ events, modalActive, sessionKey, expanded
           const envelope = parseUntrustedEnvelope(event.content)
           const body = envelope ? envelope.inner : event.content
           const content = full && (event.type === "tool_result" || event.type === "bash_result")
-            ? <Box flexDirection="column"><Text bold color={PALETTE.text}>{event.toolName || event.type} · expanded (click to collapse)</Text>{envelope && <Text color={PALETTE.muted}>{"  ⚠ untrusted output"}{envelope.risk ? ` · risk=${envelope.risk}` : ""}</Text>}<Text color={PALETTE.text}>{terminalText(body)}</Text></Box>
+            ? <Box flexDirection="column"><Text bold color={PALETTE.text}>{event.toolName || event.type} · expanded (click to collapse)</Text>{envelope && <Text color={PALETTE.muted}>{"  ⚠ 未經信任的輸出"}{envelope.risk ? ` · risk=${envelope.risk}` : ""}</Text>}<Text color={PALETTE.text}>{terminalText(body)}</Text></Box>
             : <ScreenProvider value="prompt"><EventItem event={event} /></ScreenProvider>;
           item = { event, width: columns, expanded: full, lines: renderToString(content, { columns }).split("\n").map(text => ({ text, event })) };
           cache.current.set(event.id, item);
@@ -106,7 +106,7 @@ export function ConversationViewport({ events, modalActive, sessionKey, expanded
           return <Text key={lineIndex}><Text backgroundColor={PALETTE.raised} color={PALETTE.text}>{isStart ? text.slice(colStart) : text}</Text></Text>;
         }
         return <Text key={lineIndex} color={PALETTE.text}>{line.text}</Text>;
-      }) : <Text color={PALETTE.text}>Ready. Describe the engagement work you want to perform.</Text>}
+      }) : <Text color={PALETTE.text}>就緒。請描述你要執行的授權測試工作。</Text>}
     </Box>
     {offset !== null && <Box ref={latest}><Text wrap="truncate-end" color={copiedNote ? PALETTE.text : PALETTE.focus}>{copiedNote ?? `↑ Reviewing ${start + 1}–${Math.min(start + page, lines.length)} / ${lines.length} · click to jump to latest ↓`}</Text></Box>}
     {offset === null && copiedNote && <Box><Text wrap="truncate-end" color={PALETTE.text}>{copiedNote}</Text></Box>}

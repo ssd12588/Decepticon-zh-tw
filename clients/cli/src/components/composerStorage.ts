@@ -20,7 +20,7 @@ export function loadComposer(path: string): ComposerMemory {
       && "history" in value && Array.isArray(value.history) && value.history.every((item: unknown) => typeof item === "string")) {
       return { draft: value.draft, history: value.history };
     }
-    throw new TypeError("Invalid composer state");
+    throw new TypeError("輸入框狀態無效");
   } catch (error) {
     if (error instanceof Error && "code" in error && error.code === "ENOENT") return { draft: "", history: [] };
     throw error;

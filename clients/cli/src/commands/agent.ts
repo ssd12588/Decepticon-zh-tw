@@ -61,7 +61,7 @@ async function listOrchestrators(): Promise<string[]> {
 
 const agent: Command = {
   name: "agent",
-  description: "Show or switch the active orchestrator for this session",
+  description: "顯示或切換本次工作階段使用的協同器",
   argumentHint: "[<name> | clear]",
   async execute(args, ctx) {
     const arg = args.trim();
@@ -77,13 +77,13 @@ const agent: Command = {
             lines.push(`Active orchestrator override: ${current}`);
           } else {
             lines.push(
-              "No override active — using the launcher's default orchestrator selection.",
+              "目前沒有覆寫 —— 使用啟動器的預設協同器選擇。",
             );
           }
           lines.push("");
-          lines.push("Available orchestrators:");
+          lines.push("可用的協同器：");
           if (orchestrators.length === 0) {
-            lines.push("  (none — is the langgraph stack up?)");
+            lines.push("  （無 —— langgraph 服務堆疊有啟動嗎？）");
           } else {
             for (const o of orchestrators) {
               const mark = o === current ? "*" : " ";
@@ -92,8 +92,8 @@ const agent: Command = {
           }
           lines.push("");
           lines.push("Usage:");
-          lines.push("  /agent <name>     Switch (e.g. /agent vulnresearch)");
-          lines.push("  /agent clear      Drop the override, resume default behaviour");
+          lines.push("  /agent <name>     切換（例：/agent vulnresearch）");
+          lines.push("  /agent clear      取消覆寫，回到預設行為");
           ctx.addSystemEvent(lines.join("\n"));
         } catch (err) {
           ctx.addSystemEvent(
@@ -116,7 +116,7 @@ const agent: Command = {
         ctx.addSystemEvent(
           prev
             ? `Orchestrator override cleared (was '${prev}'). Default behaviour resumes on next message.`
-            : "No override was set.",
+            : "沒有設定過覆寫。",
         );
       } catch (error) {
         ctx.addSystemEvent(error instanceof Error ? error.message : String(error));
@@ -131,7 +131,7 @@ const agent: Command = {
         if (!orchestrators.includes(arg)) {
           const available = orchestrators.length > 0
             ? `Available: ${orchestrators.join(", ")}.`
-            : "No orchestrators registered — is the langgraph stack up?";
+            : "沒有已註冊的協同器 —— langgraph 服務堆疊有啟動嗎？";
           ctx.addSystemEvent(
             `'${arg}' isn't currently registered with the agent runtime. ${available}`,
           );

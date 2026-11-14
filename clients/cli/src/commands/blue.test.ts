@@ -79,8 +79,8 @@ describe("Blue source verification", () => {
 
   it("reports records delivered during the current collector run", () => {
     const lines = assessBlueCoverage("/srv/logs", metrics);
-    expect(lines[0]).toContain("HTTP record reached");
-    expect(lines[1]).toContain("record reached the receiver");
+    expect(lines[0]).toContain("HTTP 紀錄送達接收端");
+    expect(lines[1]).toContain("紀錄送達接收端");
   });
 
   it("does not treat an old retained record as current delivery", () => {
@@ -88,7 +88,7 @@ describe("Blue source verification", () => {
       ...metrics,
       target_log_last_received_at: new Date(999 * 1000).toISOString(),
     });
-    expect(lines[1]).toContain("no record reached");
+    expect(lines[1]).toContain("沒有紀錄送達接收端");
   });
 
   it("distinguishes a missing matching log file from a silent file", () => {
@@ -107,7 +107,7 @@ describe("Blue source verification", () => {
         target_logs: { ...metrics.collector_sources.target_logs, records_total: 0 },
       },
     });
-    expect(silent[1]).toContain("no record reached");
+    expect(silent[1]).toContain("沒有紀錄送達接收端");
   });
 });
 
@@ -123,7 +123,7 @@ describe("Blue engagement configuration", () => {
   });
 
   it("refuses to resolve a config path without an engagement", () => {
-    expect(() => blueConfigPath()).toThrow(/No active engagement/);
+    expect(() => blueConfigPath()).toThrow(/沒有進行中的授權測試任務/);
   });
 
   it("requires an existing blue.json before the project is engagement-scoped", () => {

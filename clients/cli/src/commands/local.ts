@@ -1,12 +1,12 @@
 import type { Command } from "./types.js";
 
 const definitions = [
-  { name: "status", description: "Show mode, session, connection and Blue monitoring state" },
-  { name: "doctor", description: "Inspect this session's scope, ROE, workflow pins, model and budget (read-only)" },
-  { name: "sessions", description: "Find conversations in this engagement", argumentHint: "[all | legacy]" },
+  { name: "status", description: "顯示模式、工作階段、連線與 Blue 監控狀態" },
+  { name: "doctor", description: "檢視本次工作階段的範圍、RoE、工作流程鎖定、模型與預算（唯讀）" },
+  { name: "sessions", description: "尋找此授權測試任務中的對話", argumentHint: "[all | legacy]" },
   { name: "queue", description: "Edit or remove waiting messages", argumentHint: "[clear]" },
-  { name: "alerts", description: "Review Blue incidents and investigation details", argumentHint: "[incident-id]" },
-  { name: "export", description: "Export the current conversation without overwriting files", argumentHint: "[markdown | json] [path]" },
+  { name: "alerts", description: "檢視 Blue 事件與調查細節", argumentHint: "[incident-id]" },
+  { name: "export", description: "匯出目前對話（不覆寫既有檔案）", argumentHint: "[markdown | json] [path]" },
 ] as const;
 
 // Synchronous argument completion for the fixed-choice local commands.

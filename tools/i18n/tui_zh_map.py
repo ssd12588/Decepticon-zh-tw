@@ -1,0 +1,198 @@
+"""English → zh-TW literal map for the Ink CLI (clients/cli/src).
+
+Every key must appear verbatim as a whole literal in the sources. Keys are
+applied to "double", 'single', >JSX text< and `backtick` forms. Anything that
+looks like an identifier, flag, path, status value or command example stays
+out of this map on purpose.
+"""
+
+# Provider / vendor display names are deliberately absent: they are proper
+# nouns users search for (Anthropic, OpenAI, AWS Bedrock, Z.ai, ...).
+MAP: dict[str, str] = {
+    # ── Composer hints ────────────────────────────────────────────────
+    "↑/↓ history or multiline movement · ←/→ move · Home/End line start/end": "↑/↓ 歷史紀錄或多行移動 · ←/→ 移動 · Home/End 行首／行尾",
+    "Ctrl/Alt+Backspace delete previous word · Ctrl+Delete / Alt+D delete next word": "Ctrl/Alt+Backspace 刪除前一個詞 · Ctrl+Delete／Alt+D 刪除下一個詞",
+    "Ctrl+←/→ / Alt+B/F move by word · Backspace/Delete remove a character": "Ctrl+←/→ 或 Alt+B/F 以詞移動 · Backspace/Delete 刪除一個字元",
+    "Ctrl+A/E line start/end · Ctrl+K/U cut to line end/start · Ctrl+W cut previous token": "Ctrl+A/E 行首／行尾 · Ctrl+K/U 剪到行尾／行首 · Ctrl+W 剪下前一個詞",
+    "Ctrl+C pause; twice cancel · idle Ctrl+C clear/exit · empty Ctrl+D twice exit": "Ctrl+C 暫停；連按兩次取消 · 閒置時 Ctrl+C 清除／離開 · 空白輸入連按兩次 Ctrl+D 離開",
+    "Ctrl+Y paste last cut · Ctrl+_ undo · Ctrl+R search history · Ctrl+G external editor": "Ctrl+Y 貼上上次剪下的內容 · Ctrl+_ 復原 · Ctrl+R 搜尋歷史 · Ctrl+G 用外部編輯器",
+    "EDITOR/VISUAL must name an executable": "EDITOR/VISUAL 必須指向可執行的程式",
+    "Unclosed quote or escape in EDITOR/VISUAL": "EDITOR/VISUAL 中有未閉合的引號或跳脫字元",
+    "Enter send · Shift+Enter newline · /resume sessions": "Enter 送出 · Shift+Enter 換行 · /resume 工作階段",
+    "Enter send a follow-up to continue · /resume sessions · Ctrl+C cancel": "Enter 送出後續訊息以繼續 · /resume 工作階段 · Ctrl+C 取消",
+    "Esc / Ctrl+C pause · Ctrl+C twice cancel · /queue edit": "Esc／Ctrl+C 暫停 · 連按兩次 Ctrl+C 取消 · /queue 編輯",
+    "Esc close menu/search first; otherwise pause active run · send a follow-up to continue · /resume sessions": "Esc 先關閉選單／搜尋，否則暫停進行中的回合 · 送出後續訊息以繼續 · /resume 工作階段",
+    "Tab complete · Alt+P model picker · Ctrl+O transcript · ? show/hide this help": "Tab 補完 · Alt+P 模型選擇 · Ctrl+O 對話紀錄 · ? 顯示／隱藏本說明",
+    "PgUp/PgDn scroll · /commands · Esc closes": "PgUp/PgDn 捲動 · /commands · Esc 關閉",
+    "Ctrl+Y paste last cut": "Ctrl+Y 貼上上次剪下的內容",
+    # ── Panels, pickers, status ──────────────────────────────────────
+    "Keyboard shortcuts": "鍵盤快速鍵",
+    "Find skill": "尋找技能",
+    "Traverse skills": "瀏覽技能",
+    "No match": "沒有符合項目",
+    "No matching entries.": "沒有符合的項目。",
+    "type to filter": "輸入以篩選",
+    "Other (type your answer)": "其他（自行輸入答案）",
+    "Type your answer": "輸入你的答案",
+    "not reported": "未回報",
+    "Plan complete": "計畫完成",
+    "Invalid composer state": "輸入框狀態無效",
+    "Unable to complete the selected action.": "無法完成所選動作。",
+    "Ready. Describe the engagement work you want to perform.": "就緒。請描述你要執行的授權測試工作。",
+    "Background command": "背景指令",
+    "Budget": "預算",
+    "Update": "更新",
+    "  ↑/↓: move  space: toggle  enter: submit selected  esc: cancel": "  ↑/↓：移動  space：切換  enter：送出所選  esc：取消",
+    "  enter: submit  esc: back to options": "  enter：送出  esc：回到選項",
+    "  ⚠ untrusted output": "  ⚠ 未經信任的輸出",
+    "  esc to dismiss": "  esc：關閉",
+    "ctrl+o to expand · esc to dismiss": "ctrl+o 展開 · esc 關閉",
+    " (ctrl+o to expand)": "（ctrl+o 展開）",
+    "(ctrl+o to expand)": "（ctrl+o 展開）",
+
+    # ── /agent ───────────────────────────────────────────────────────
+    "  (none — is the langgraph stack up?)": "  （無 —— langgraph 服務堆疊有啟動嗎？）",
+    "  /agent <name>     Switch (e.g. /agent vulnresearch)": "  /agent <name>     切換（例：/agent vulnresearch）",
+    "  /agent clear      Drop the override, resume default behaviour": "  /agent clear      取消覆寫，回到預設行為",
+    "Available orchestrators:": "可用的協同器：",
+    "No orchestrators registered — is the langgraph stack up?": "沒有已註冊的協同器 —— langgraph 服務堆疊有啟動嗎？",
+    "No override active — using the launcher's default orchestrator selection.": "目前沒有覆寫 —— 使用啟動器的預設協同器選擇。",
+    "No override was set.": "沒有設定過覆寫。",
+    "Show or switch the active orchestrator for this session": "顯示或切換本次工作階段使用的協同器",
+
+    # ── /blue ────────────────────────────────────────────────────────
+    "--logs needs an absolute directory path on the Docker host": "--logs 需要 Docker 主機上的絕對目錄路徑",
+    "\\nAI watch: unavailable": "\\nAI 監控：無法使用",
+    "\\nCoverage: sensor or source unavailable": "\\n覆蓋率：感測器或來源無法使用",
+    "<up|engagement|status|verify|sources|events|incidents|metrics|analyze|stop> [local port] [--logs /host/path]": "<up|engagement|status|verify|sources|events|incidents|metrics|analyze|stop> [本機埠] [--logs /host/path]",
+    "Blue Cell is investigating live target events. The automatic monitor continues independently; use /mode red to return.": "Blue Cell 正在調查即時目標事件。自動監控會獨立持續執行；使用 /mode red 返回。",
+    "Blue sensor is not running. Use /blue up 127.0.0.1:3000.": "Blue 感測器沒有在執行。請用 /blue up 127.0.0.1:3000。",
+    "Blue sensor stopped. Stored events and bodies remain in Docker volumes.": "Blue 感測器已停止。已儲存的事件與內容仍保留在 Docker volume 中。",
+    "blue-engagement env returned no environment mapping.": "blue-engagement env 沒有回傳任何環境對應。",
+    "Cannot determine the Docker host gateway IPv4 address": "無法判斷 Docker 主機閘道的 IPv4 位址",
+    "Collector is unavailable; source delivery cannot be verified.": "收集器無法使用；無法驗證來源是否真的送達。",
+    "collector not running": "收集器未執行",
+    "Event count must be between 1 and 100": "事件數量必須介於 1 到 100",
+    "Incident count must be between 1 and 100": "事件（incident）數量必須介於 1 到 100",
+    "No active engagement: DECEPTICON_ENGAGEMENT is not set.": "沒有進行中的授權測試任務：未設定 DECEPTICON_ENGAGEMENT。",
+    "No Blue events yet.": "目前還沒有 Blue 事件。",
+    "No Blue incidents yet. The monitor is watching the target continuously.": "目前還沒有 Blue 事件（incident）。監控器正在持續觀察目標。",
+    "No target or proxy file has delivered an event yet. Produce a real target event, then check again.": "尚無目標或代理檔案送出事件。請先產生一個真實的目標事件，再回來檢查。",
+    "No target upstream resolved from the engagement Blue config.": "無法從授權測試任務的 Blue 設定解析出目標上游。",
+    "none (proxy only)": "無（僅代理）",
+    "Proxy: an HTTP record reached the receiver during this collector run.": "代理：本次收集期間有 HTTP 紀錄送達接收端。",
+    "Proxy: no HTTP record confirmed during this collector run; send a request through http://127.0.0.1:18080.": "代理：本次收集期間未確認任何 HTTP 紀錄；請經由 http://127.0.0.1:18080 送出請求。",
+    "Run the always-on local Blue Cell sensor and incident monitor": "啟動常駐的本機 Blue Cell 感測器與事件監控",
+    "Source count must be between 1 and 100": "來源數量必須介於 1 到 100",
+    "Target logs: a file was opened, but no record reached the receiver during this collector run.": "目標日誌：有開啟檔案，但本次收集期間沒有紀錄送達接收端。",
+    "Target logs: a record reached the receiver during this collector run. Produce a new target log to confirm live emission.": "目標日誌：本次收集期間有紀錄送達接收端。請產生一筆新的目標日誌以確認即時送出。",
+    "Target logs: collector is not running.": "目標日誌：收集器未執行。",
+    "Target logs: no host log directory enrolled.": "目標日誌：尚未登記任何主機日誌目錄。",
+    "Usage: /blue engagement create --label <label> --target 127.0.0.1:3000 [--logs /absolute/host/logs] [--rules file.jsonl] [--confirm]": "用法：/blue engagement create --label <label> --target 127.0.0.1:3000 [--logs /absolute/host/logs] [--rules file.jsonl] [--confirm]",
+    "Usage: /blue up 127.0.0.1:3000 [--logs /absolute/host/logs]": "用法：/blue up 127.0.0.1:3000 [--logs /absolute/host/logs]",
+    "Usage: /blue up 127.0.0.1:3000 [--logs /absolute/host/logs] — or create the engagement Blue config first: /blue engagement create --label <label> --target 127.0.0.1:3000": "用法：/blue up 127.0.0.1:3000 [--logs /absolute/host/logs] —— 或先建立此任務的 Blue 設定：/blue engagement create --label <label> --target 127.0.0.1:3000",
+    "Usage: /blue up 127.0.0.1:3000 [--logs /absolute/host/logs] | status | verify | sources [1-100] | events [1-100] | incidents [1-100] | metrics | analyze | stop": "用法：/blue up 127.0.0.1:3000 [--logs /absolute/host/logs] | status | verify | sources [1-100] | events [1-100] | incidents [1-100] | metrics | analyze | stop",
+    "Use a local HTTP service such as 127.0.0.1:3000": "請使用本機 HTTP 服務，例如 127.0.0.1:3000",
+
+    # ── /clear, /plan, /version, /pwd ────────────────────────────────
+    "Start a fresh conversation; preserve saved sessions": "開始全新對話（保留已儲存的工作階段）",
+    "Usage: /clear or /new (no arguments)": "用法：/clear 或 /new（不接受參數）",
+    "Enter optional Plan mode (same as /mode plan)": "進入選用的計畫模式（等同 /mode plan）",
+    "Show keyboard shortcuts": "顯示鍵盤快速鍵",
+    "Show the running Decepticon version and CLI runtime": "顯示執行中的 Decepticon 版本與 CLI 執行環境",
+    "Show the target workspace and CLI process directory": "顯示目標工作區與 CLI 執行目錄",
+    "Usage: /plan (then send your planning message)": "用法：/plan（接著送出你的規劃訊息）",
+
+    # ── /file, /help, 本地指令說明 ──────────────────────────────────
+    "Load a prompt from a file and send it": "從檔案載入提示詞並送出",
+    "Unknown error reading file": "讀取檔案時發生未知錯誤",
+    "Usage: /file <path>  — reads the file and sends its contents as a message.": "用法：/file <path>  —— 讀取檔案並將其內容作為訊息送出。",
+    "Show available commands and shortcuts": "顯示可用指令與快速鍵",
+    "Blue monitoring": "Blue 監控",
+    "Export the current conversation without overwriting files": "匯出目前對話（不覆寫既有檔案）",
+    "Find conversations in this engagement": "尋找此授權測試任務中的對話",
+    "Inspect this session's scope, ROE, workflow pins, model and budget (read-only)": "檢視本次工作階段的範圍、RoE、工作流程鎖定、模型與預算（唯讀）",
+    "Review Blue incidents and investigation details": "檢視 Blue 事件與調查細節",
+    "Show mode, session, connection and Blue monitoring state": "顯示模式、工作階段、連線與 Blue 監控狀態",
+
+    # ── /mode ────────────────────────────────────────────────────────
+    "/mode blue 127.0.0.1:3000, or configure the engagement first:": "/mode blue 127.0.0.1:3000，或先設定此任務：",
+    "Blue requires a running AutoBot sensor. Start one with": "Blue 需要執行中的 AutoBot 感測器。請先啟動：",
+    "Switch Plan, Red, or Blue conversation": "切換計畫（Plan）、紅隊（Red）或 Blue 對話",
+    "Usage: /mode plan | red | blue": "用法：/mode plan | red | blue",
+
+    # ── /model（供應商名稱保留原文）──────────────────────────────────
+    "  /model <id>     Switch the primary model for the next message": "  /model <id>     切換下一則訊息使用的主要模型",
+    "  /model clear    Drop the override, resume the default chain": "  /model clear    取消覆寫，回到預設備援鏈",
+    "  No configured routes found. Check the local .env or enter a custom model ID manually.": "  找不到已設定的路由。請檢查本機 .env，或手動輸入自訂模型 ID。",
+    "Configured route candidates (credentials and provider entitlement are not verified):": "已設定的路由候選（憑證與供應商權益未經驗證）：",
+    "Default credential chain": "預設憑證鏈",
+    "Model override cleared. Default chain resumes on next message.": "已清除模型覆寫。下一則訊息起回到預設備援鏈。",
+    "No override active — using the credentials-priority chain from .env": "目前沒有覆寫 —— 使用 .env 中的憑證優先順序鏈",
+    "Show or change the LLM model for this session": "顯示或變更本次工作階段使用的 LLM 模型",
+
+    # ── /plan 前置條件 ───────────────────────────────────────────────
+    "plan/roe.json is not a valid scope document. Import a scope with /scope import <file> --confirm.": "plan/roe.json 不是有效的範圍文件。請用 /scope import <file> --confirm 匯入範圍。",
+    "Red requires an engagement workspace with an authorized target.": "紅隊模式需要一個已授權目標的授權測試任務工作區。",
+    "Refusing a non-regular scope path.": "拒絕非一般檔案的範圍路徑。",
+    "Refusing a symlink or non-directory plan path.": "拒絕符號連結或非目錄的計畫路徑。",
+    "Refusing a symlink or non-regular scope path.": "拒絕符號連結或非一般檔案的範圍路徑。",
+    "The engagement scope has no enforced machine block. Create the engagement with targets, or import an updated plan/roe.json with /scope import <file> --confirm.": "此任務的範圍缺少強制執行用的 machine 區塊。請在建立任務時指定目標，或用 /scope import <file> --confirm 匯入更新後的 plan/roe.json。",
+
+    # ── /plugins ─────────────────────────────────────────────────────
+    "  /agent <orchestrator>     Switch active orchestrator after enabling": "  /agent <orchestrator>     啟用後切換使用中的協同器",
+    "  /plugins disable <name>   Drop the bundle": "  /plugins disable <name>   卸載該組合",
+    "  /plugins enable <name>    Activate the bundle (runtime, no restart)": "  /plugins enable <name>    啟用該組合（執行期生效，免重啟）",
+    "Activations are runtime-only. To persist across `decepticon restart`,": "啟用只在此次執行期有效。若要跨 `decepticon restart` 保留，",
+    "Available plugin bundles:": "可用的外掛組合：",
+    "Is the decepticon stack running?": "decepticon 服務堆疊有在執行嗎？",
+    "List or toggle agent plugin bundles": "列出或切換代理外掛組合",
+    "set DECEPTICON_PLUGINS in ~/.decepticon/.env (e.g. standard,plugins).": "請在 ~/.decepticon/.env 設定 DECEPTICON_PLUGINS（例：standard,plugins）。",
+    "Tip: switch to the new orchestrator with `/agent vulnresearch`.": "提示：用 `/agent vulnresearch` 切換到新的協同器。",
+
+    # ── 其他指令與狀態 ───────────────────────────────────────────────
+    "Exit Decepticon CLI": "離開 Decepticon CLI",
+    "Choose a saved session and continue its conversation": "選擇已儲存的工作階段並接續對話",
+    "RoE exceeds the 1 MiB limit.": "RoE 超過 1 MiB 上限。",
+    "RoE validation response does not match the submitted bytes.": "RoE 驗證回應與送出的內容不一致。",
+    "Unknown assistant purpose; execution is blocked.": "未知的 assistant 用途；已阻擋執行。",
+    "Import an operator-provided engagement scope (create-only)": "匯入操作員提供的授權測試範圍（僅限新建）",
+    "Scope already exists. Import will not replace plan/roe.json.": "範圍已存在。匯入不會覆寫 plan/roe.json。",
+    "Scope import requires a safe paused workspace boundary.": "匯入範圍需要處於安全暫停狀態的工作區界線。",
+    "Scope import requires an engagement workspace.": "匯入範圍需要在授權測試任務的工作區內執行。",
+    "Scope imported to plan/roe.json. Red enforces this scope.": "範圍已匯入 plan/roe.json。紅隊模式會強制執行此範圍。",
+    "Scope must be a regular file no larger than 1 MiB.": "範圍必須是一般檔案，且不超過 1 MiB。",
+    "Usage: /scope import <file> --confirm": "用法：/scope import <file> --confirm",
+    "Invalid bundle response": "外掛組合回應格式無效",
+    "machine scope ready (runtime enforces targets and authorized windows)": "機器範圍就緒（執行期會強制檢查目標與授權時段）",
+    "machine scope unavailable": "機器範圍無法使用",
+    "machine scope unavailable or invalid; Red remains gated": "機器範圍無法使用或無效；紅隊模式仍受限制",
+    "none registered": "未註冊任何項目",
+    "not yet recorded": "尚未記錄",
+    "unavailable (checkpoint read failed or session scope mismatch)": "無法使用（讀取 checkpoint 失敗，或工作階段範圍不一致）",
+    "unavailable (runtime bundle read failed)": "無法使用（讀取執行期外掛組合失敗）",
+    "Choose fullscreen controls or native scrollback": "選擇全螢幕操作或終端機原生捲動",
+    "Enable mouse controls or preserve native selection": "啟用滑鼠操作，或保留終端機原生選取",
+    "No pending question. Send a message to continue, or /resume to choose a saved session.": "沒有待回答的問題。送出訊息以繼續，或用 /resume 選擇已儲存的工作階段。",
+    "Return to the pending question": "回到待回答的問題",
+
+    # ── doctorReport 的顯示片段（模板字串內）─────────────────────────
+    "not selected": "未選擇",
+    "not confirmed": "未確認",
+    "confirmed": "已確認",
+    "unscoped": "未設定範圍",
+    "default (no pin)": "預設（未鎖定）",
+    "automatic provider routing (no session override)": "自動供應商路由（本次工作階段未覆寫）",
+    "not started": "尚未開始",
+    "none recorded": "未記錄",
+    "defaults or not recorded": "預設值或未記錄",
+    "no budget_warning event yet this run": "本次執行尚無 budget_warning 事件",
+    "Host runtime details (middleware slot matrix, KG, Skillogy, MCP auth):": "主機端執行期細節（middleware 插槽矩陣、KG、Skillogy、MCP 驗證）：",
+}
+
+# Prefix-only rewrites: keep the provider/vendor name, translate the label.
+PREFIX_RULES: list[tuple[str, str]] = [
+    (r'"Current prod / ', '"目前正式版 / '),
+    (r'"Shared catalog / ', '"共享目錄 / '),
+    (r'"Configured custom / local"', '"已設定的自訂／本機"'),
+]

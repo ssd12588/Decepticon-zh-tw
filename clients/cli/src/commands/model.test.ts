@@ -18,7 +18,7 @@ function run(args: string): { events: string[]; picker?: ChoicePickerRequest } {
 it("does not show the whole catalogue without configured providers", () => {
   vi.stubEnv("DECEPTICON_COMPOSE_ENV_FILE", "/nonexistent/decepticon-test.env");
   const picker = run("").picker;
-  expect(picker?.options).toEqual([{ label: "Default credential chain", value: "clear" }]);
+  expect(picker?.options).toEqual([{ label: "預設憑證鏈", value: "clear" }]);
 });
 
 it("offers only the configured provider in the picker and completion", () => {

@@ -102,7 +102,7 @@ describe("/agent catalog discovery", () => {
     errorOffset = 100;
     const listing = await runAgent("");
     expect(listing).toContain("Could not list orchestrators: assistants/search HTTP 503");
-    expect(listing).not.toContain("Available orchestrators:");
+    expect(listing).not.toContain("可用的協同器：");
   });
 
   it("reads the empty page following an exactly full final page", async () => {

@@ -20,7 +20,7 @@ function currentMode(): RunMode {
 
 const mode: Command = {
   name: "mode",
-  description: "Switch Plan, Red, or Blue conversation",
+  description: "切換計畫（Plan）、紅隊（Red）或 Blue 對話",
   argumentHint: "[plan | red | blue]",
   complete: (args) => ["plan", "red", "blue"].filter((value) => value.startsWith(args)),
   async execute(args, ctx) {
@@ -42,7 +42,7 @@ const mode: Command = {
       return;
     }
     if (selected !== "plan" && selected !== "red" && selected !== "blue") {
-      ctx.addSystemEvent("Usage: /mode plan | red | blue");
+      ctx.addSystemEvent("用法：/mode plan | red | blue");
       return;
     }
     const next = selected;

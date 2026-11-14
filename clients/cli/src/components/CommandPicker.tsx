@@ -24,7 +24,7 @@ export function CommandPicker({ request, onClose, onError }: Props) {
   function choose(index: number) {
     const option = options[index]; if (!option) return;
     onClose();
-    Promise.resolve().then(() => request.onSelect(option.value)).catch((error: unknown) => onError(error instanceof Error ? error.message : "Unable to complete the selected action."));
+    Promise.resolve().then(() => request.onSelect(option.value)).catch((error: unknown) => onError(error instanceof Error ? error.message : "無法完成所選動作。"));
   }
   function move(delta: number) { select(Math.max(0, Math.min(Math.max(0, options.length - 1), selectedRef.current + delta))); }
   const root = useRef<DOMElement>(null);
@@ -41,9 +41,9 @@ export function CommandPicker({ request, onClose, onError }: Props) {
   });
   return <Box ref={root} flexDirection="column" marginTop={1}>
     <Text color={PALETTE.focus} bold wrap="truncate-end">{request.title}</Text>
-    <Text color={PALETTE.muted}>Search: {query || "type to filter"}</Text>
+    <Text color={PALETTE.muted}>Search: {query || "輸入以篩選"}</Text>
     {options.slice(offset, offset + pageSize).map((option, index) => <PickerOption key={option.value} {...option} selected={offset + index === selected} onClick={() => choose(offset + index)} />)}
-    {!options.length && <Text color={PALETTE.muted}>No matching entries.</Text>}
+    {!options.length && <Text color={PALETTE.muted}>沒有符合的項目。</Text>}
     <Text color={PALETTE.muted}>{options.length ? `${selected + 1}/${options.length} · ` : ""}↑/↓ or wheel · Enter / click select · Esc back</Text>
   </Box>;
 }

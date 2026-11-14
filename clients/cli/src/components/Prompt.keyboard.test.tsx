@@ -148,10 +148,10 @@ it("opens shortcut help on empty question mark and dismisses it with Escape", ()
   // When requesting keyboard help.
   act(() => { keyboard.handler?.("?", {}); });
   // Then help is visible without entering a literal question mark.
-  expect(view.container.textContent).toContain("Keyboard shortcuts");
+  expect(view.container.textContent).toContain("鍵盤快速鍵");
   act(() => { keyboard.handler?.("", { escape: true }); keyboard.handler?.("why?", {}); });
   expect(view.container.textContent).toContain("› why?");
-  expect(view.container.textContent).not.toContain("Keyboard shortcuts");
+  expect(view.container.textContent).not.toContain("鍵盤快速鍵");
 });
 
 it("keeps question marks in an active history query", () => {
@@ -160,7 +160,7 @@ it("keeps question marks in an active history query", () => {
   act(() => { keyboard.handler?.("r", { ctrl: true }); keyboard.handler?.("?", {}); });
 
   expect(view.container.textContent).toContain("History search: ?");
-  expect(view.container.textContent).not.toContain("Keyboard shortcuts");
+  expect(view.container.textContent).not.toContain("鍵盤快速鍵");
 });
 
 it("preserves literal text resembling a terminal key sequence", () => {

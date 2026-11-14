@@ -41,7 +41,7 @@ export const BackgroundCompleteMessage = React.memo(
     return (
       <Box marginTop={1} flexDirection="column">
         <Text color={failed ? PALETTE.error : PALETTE.success}>
-          {GLYPH_DOT} <Text color={PALETTE.text} bold>Background command</Text>
+          {GLYPH_DOT} <Text color={PALETTE.text} bold>背景指令</Text>
           {command ? ` "${command}"` : ""} completed{exitStr}
           <Text color={PALETTE.text} dimColor>{suffix}</Text>
         </Text>

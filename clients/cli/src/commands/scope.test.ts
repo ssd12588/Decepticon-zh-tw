@@ -36,7 +36,7 @@ describe("operator scope registration", () => {
     expect(await readdir(path.join(root, "plan"))).toEqual(["roe.json"]);
     // The imported human-only document has no machine block yet, so Red stays
     // gated until an updated scope with one is installed.
-    await expect(assertRedApproved()).rejects.toThrow("no enforced machine block");
+    await expect(assertRedApproved()).rejects.toThrow("強制執行用的 machine 區塊");
   });
 
   it.each(["existing", "symlink destination", "symlink directory"])("preserves the installed scope for %s", async (scenario) => {
@@ -54,7 +54,7 @@ describe("operator scope registration", () => {
     // Then the destination is not replaced.
     if (scenario !== "symlink directory") expect(await readFile(path.join(root, "plan", "roe.json"), "utf8")).toBe("original");
     else expect(await readdir(outside)).toEqual([]);
-    expect(messages.at(-1)).toMatch(/Refusing|already exists/);
+    expect(messages.at(-1)).toMatch(/拒絕|已存在/);
   });
 
   it.each(["{}", "not json", "oversized", "pause failed", "no confirmation"])("does not publish after %s", async (scenario) => {
@@ -72,6 +72,6 @@ describe("operator scope registration", () => {
     // Given a corrupt server response.
     vi.stubGlobal("fetch", async () => Response.json({ sha256: "0".repeat(64), engagement_name: "wrong" }));
     // When raw scope is validated, then mismatched bytes are refused.
-    await expect(validateRoe(validRoe)).rejects.toThrow("does not match");
+    await expect(validateRoe(validRoe)).rejects.toThrow("不一致");
   });
 });

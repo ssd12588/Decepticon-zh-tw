@@ -75,14 +75,14 @@ export function parseLocalUpstream(input: string): string {
     url.search ||
     url.hash
   ) {
-    throw new Error("Use a local HTTP service such as 127.0.0.1:3000");
+    throw new Error("請使用本機 HTTP 服務，例如 127.0.0.1:3000");
   }
   return url.origin;
 }
 
 export function parseBlueUpArgs(input: string): { upstream: string; logDir?: string } {
   const match = /^up\s+(\S+)(?:\s+--logs(?:\s+|=)(.+))?$/.exec(input.trim());
-  if (!match) throw new Error("Usage: /blue up 127.0.0.1:3000 [--logs /absolute/host/logs]");
+  if (!match) throw new Error("用法：/blue up 127.0.0.1:3000 [--logs /absolute/host/logs]");
   const upstream = parseLocalUpstream(match[1]);
   if (!match[2]) return { upstream };
   let logDir = match[2].trim();
@@ -91,7 +91,7 @@ export function parseBlueUpArgs(input: string): { upstream: string; logDir?: str
     logDir = logDir.slice(1, -1);
   }
   if (!isAbsolute(logDir) || logDir.includes("\0")) {
-    throw new Error("--logs needs an absolute directory path on the Docker host");
+    throw new Error("--logs 需要 Docker 主機上的絕對目錄路徑");
   }
   return { upstream, logDir };
 }
@@ -115,7 +115,7 @@ export function engagementLabel(): string {
 }
 
 export function blueConfigPath(label: string = engagementLabel()): string {
-  if (!label) throw new Error("No active engagement: DECEPTICON_ENGAGEMENT is not set.");
+  if (!label) throw new Error("沒有進行中的授權測試任務：未設定 DECEPTICON_ENGAGEMENT。");
   const override = process.env.DECEPTICON_BLUE_WORKSPACE?.trim();
   const root = override || join(homedir(), ".decepticon", "blue", label);
   return join(root, "blue.json");
@@ -158,7 +158,7 @@ async function loadEngagementSensorEnv(): Promise<Record<string, string>> {
   } catch {
     throw new Error(`blue-engagement env returned unexpected output: ${output.slice(0, 200)}`);
   }
-  if (!payload.env) throw new Error("blue-engagement env returned no environment mapping.");
+  if (!payload.env) throw new Error("blue-engagement env 沒有回傳任何環境對應。");
   return payload.env;
 }
 
@@ -242,12 +242,12 @@ interface DockerMount {
 
 async function enrolledLogSource(): Promise<string> {
   const id = (await runCompose(["ps", "-q", "blue-collector"], process.env)).trim();
-  if (!id) return "collector not running";
+  if (!id) return "收集器未執行";
   const mounts = JSON.parse(await runDocker(
     ["inspect", "--format", "{{json .Mounts}}", id], process.env,
   )) as DockerMount[];
   const mount = mounts.find((item) => item.Destination === "/target-logs");
-  return mount?.Type === "bind" ? mount.Source ?? "unknown" : "none (proxy only)";
+  return mount?.Type === "bind" ? mount.Source ?? "unknown" : "無（僅代理）";
 }
 
 async function hostGatewayIp(): Promise<string> {
@@ -256,7 +256,7 @@ async function hostGatewayIp(): Promise<string> {
     process.env,
   )).trim();
   if (isIP(address) !== 4) {
-    throw new Error("Cannot determine the Docker host gateway IPv4 address");
+    throw new Error("無法判斷 Docker 主機閘道的 IPv4 位址");
   }
   return address;
 }
@@ -275,28 +275,28 @@ function receivedDuringCollectorRun(receivedAt: string | null | undefined, start
 }
 
 export function assessBlueCoverage(logSource: string, metrics: SensorMetrics): string[] {
-  if (!metrics.collector_available) return ["Collector is unavailable; source delivery cannot be verified."];
+  if (!metrics.collector_available) return ["收集器無法使用；無法驗證來源是否真的送達。"];
   const proxy = metrics.collector_sources?.proxy;
   const target = metrics.collector_sources?.target_logs;
   const since = metrics.collector_start_time_seconds;
   const lines = [
     proxy && proxy.records_total > 0 && receivedDuringCollectorRun(metrics.proxy_last_received_at, since)
-      ? "Proxy: an HTTP record reached the receiver during this collector run."
-      : "Proxy: no HTTP record confirmed during this collector run; send a request through http://127.0.0.1:18080.",
+      ? "代理：本次收集期間有 HTTP 紀錄送達接收端。"
+      : "代理：本次收集期間未確認任何 HTTP 紀錄；請經由 http://127.0.0.1:18080 送出請求。",
   ];
-  if (logSource === "none (proxy only)") {
-    lines.push("Target logs: no host log directory enrolled.");
-  } else if (logSource === "collector not running") {
-    lines.push("Target logs: collector is not running.");
+  if (logSource === "無（僅代理）") {
+    lines.push("目標日誌：尚未登記任何主機日誌目錄。");
+  } else if (logSource === "收集器未執行") {
+    lines.push("目標日誌：收集器未執行。");
   } else if (!target || target.files_opened_total === 0) {
     lines.push(`Target logs: ${logSource} is mounted, but no matching top-level file has been opened.`);
   } else if (
     target.records_total === 0 ||
     !receivedDuringCollectorRun(metrics.target_log_last_received_at, since)
   ) {
-    lines.push("Target logs: a file was opened, but no record reached the receiver during this collector run.");
+    lines.push("目標日誌：有開啟檔案，但本次收集期間沒有紀錄送達接收端。");
   } else {
-    lines.push("Target logs: a record reached the receiver during this collector run. Produce a new target log to confirm live emission.");
+    lines.push("目標日誌：本次收集期間有紀錄送達接收端。請產生一筆新的目標日誌以確認即時送出。");
   }
   return lines;
 }
@@ -308,7 +308,7 @@ export async function blueUp(args: string, context: CommandContext): Promise<voi
   const explicit = value ? parseBlueUpArgs(args) : null;
   if (!hasConfig && !explicit) {
     throw new Error(
-      "Usage: /blue up 127.0.0.1:3000 [--logs /absolute/host/logs] — or create the engagement Blue config first: /blue engagement create --label <label> --target 127.0.0.1:3000",
+      "用法：/blue up 127.0.0.1:3000 [--logs /absolute/host/logs] —— 或先建立此任務的 Blue 設定：/blue engagement create --label <label> --target 127.0.0.1:3000",
     );
   }
   // With an engagement the reviewed blue.json provides the defaults; explicit
@@ -317,7 +317,7 @@ export async function blueUp(args: string, context: CommandContext): Promise<voi
   const engagementEnv = hasConfig ? await loadEngagementSensorEnv() : {};
   const upstream = explicit?.upstream ?? engagementEnv.BLUE_TARGET_UPSTREAM;
   const logDir = explicit?.logDir ?? engagementEnv.BLUE_TARGET_LOG_DIR;
-  if (!upstream) throw new Error("No target upstream resolved from the engagement Blue config.");
+  if (!upstream) throw new Error("無法從授權測試任務的 Blue 設定解析出目標上游。");
   const gateway = await hostGatewayIp();
   const project = process.env.DECEPTICON_COMPOSE_PROJECT ?? "decepticon";
   context.addSystemEvent(`Starting Blue sensor for ${upstream}${label && hasConfig ? ` (engagement ${label})` : ""}…`);
@@ -335,8 +335,8 @@ export async function blueUp(args: string, context: CommandContext): Promise<voi
 
 const blue: Command = {
   name: "blue",
-  description: "Run the always-on local Blue Cell sensor and incident monitor",
-  argumentHint: "<up|engagement|status|verify|sources|events|incidents|metrics|analyze|stop> [local port] [--logs /host/path]",
+  description: "啟動常駐的本機 Blue Cell 感測器與事件監控",
+  argumentHint: "<up|engagement|status|verify|sources|events|incidents|metrics|analyze|stop> [本機埠] [--logs /host/path]",
   complete: (args) =>
     args.includes(" ")
       ? []
@@ -353,7 +353,7 @@ const blue: Command = {
       if (action === "engagement") {
         const [, sub = "", ...rest] = args.trim().split(/\s+/);
         if (sub !== "create") {
-          throw new Error("Usage: /blue engagement create --label <label> --target 127.0.0.1:3000 [--logs /absolute/host/logs] [--rules file.jsonl] [--confirm]");
+          throw new Error("用法：/blue engagement create --label <label> --target 127.0.0.1:3000 [--logs /absolute/host/logs] [--rules file.jsonl] [--confirm]");
         }
         if (!rest.includes("--confirm")) {
           const preview = await runPythonCli(["blue-engagement", "create", ...rest.filter((token) => token !== "--confirm"), "--dry-run"]);
@@ -366,7 +366,7 @@ const blue: Command = {
       }
       if (action === "stop" || action === "down") {
         await runCompose(["down"], process.env);
-        context.addSystemEvent("Blue sensor stopped. Stored events and bodies remain in Docker volumes.");
+        context.addSystemEvent("Blue 感測器已停止。已儲存的事件與內容仍保留在 Docker volume 中。");
         return;
       }
       if (action === "status") {
@@ -377,7 +377,7 @@ const blue: Command = {
           const metrics = await queryMonitor<{ watch_enabled: boolean; watch_backlog: number; watch_failures_total: number; watch_retrying_windows: number }>("/metrics");
           watch = `\nAI watch: ${metrics.watch_enabled ? "running" : "disabled"}; backlog=${metrics.watch_backlog}; retrying=${metrics.watch_retrying_windows}; failed_windows=${metrics.watch_failures_total}`;
         } catch {
-          watch = "\nAI watch: unavailable";
+          watch = "\nAI 監控：無法使用";
         }
         try {
           const [source, metrics] = await Promise.all([enrolledLogSource(), query<SensorMetrics>("/metrics")]);
@@ -398,20 +398,20 @@ const blue: Command = {
             `rejected=${metrics.rejected_total}; ` +
             `paused_inputs=${metrics.collector_paused_inputs ?? 0}`;
         } catch {
-          coverage = "\nCoverage: sensor or source unavailable";
+          coverage = "\n覆蓋率：感測器或來源無法使用";
         }
-        context.addSystemEvent((output.trim() || "Blue sensor is not running. Use /blue up 127.0.0.1:3000.") + watch + coverage);
+        context.addSystemEvent((output.trim() || "Blue 感測器沒有在執行。請用 /blue up 127.0.0.1:3000。") + watch + coverage);
         return;
       }
       if (action === "sources") {
         const parsed = value ? Number(value) : 20;
         if (!Number.isInteger(parsed) || parsed < 1 || parsed > 100) {
-          throw new Error("Source count must be between 1 and 100");
+          throw new Error("來源數量必須介於 1 到 100");
         }
         const page = await query<{ sources: SensorSource[]; has_more: boolean }>(`/sources?limit=${parsed}`);
         context.addSystemEvent(page.sources.length
           ? page.sources.map((source) => `${source.source} ${source.sensor_file} events=${source.events_retained} last=${source.last_received_at} seq=${source.latest_seq}`).join("\n") + (page.has_more ? "\nMore sources exist; increase the limit." : "")
-          : "No target or proxy file has delivered an event yet. Produce a real target event, then check again.");
+          : "尚無目標或代理檔案送出事件。請先產生一個真實的目標事件，再回來檢查。");
         return;
       }
       if (action === "verify") {
@@ -428,23 +428,23 @@ const blue: Command = {
       if (action === "incidents") {
         const parsed = value ? Number(value) : 20;
         if (!Number.isInteger(parsed) || parsed < 1 || parsed > 100) {
-          throw new Error("Incident count must be between 1 and 100");
+          throw new Error("事件（incident）數量必須介於 1 到 100");
         }
         const page = await queryMonitor<{ incidents: BlueIncident[] }>(`/incidents?limit=${parsed}`);
         context.addSystemEvent(page.incidents.length
           ? page.incidents.map((incident) => `${incident.id} ${incident.severity} ${incident.rule_id} event=${incident.event_seq} analysis=${incident.analysis_state}`).join("\n")
-          : "No Blue incidents yet. The monitor is watching the target continuously.");
+          : "目前還沒有 Blue 事件（incident）。監控器正在持續觀察目標。");
         return;
       }
       if (action === "events") {
         const parsed = value ? Number(value) : 20;
         if (!Number.isInteger(parsed) || parsed < 1 || parsed > 100) {
-          throw new Error("Event count must be between 1 and 100");
+          throw new Error("事件數量必須介於 1 到 100");
         }
         const metrics = await query<SensorMetrics>("/metrics");
         const after = Math.max(0, metrics.latest_seq - parsed);
         const page = await query<{ events: SensorEvent[] }>(`/events?after=${after}&limit=${parsed}`);
-        context.addSystemEvent(page.events.length ? page.events.map(formatEvent).join("\n") : "No Blue events yet.");
+        context.addSystemEvent(page.events.length ? page.events.map(formatEvent).join("\n") : "目前還沒有 Blue 事件。");
         return;
       }
       if (action === "analyze") {
@@ -453,11 +453,11 @@ const blue: Command = {
           return;
         }
         setAssistantOverride("autobot");
-        context.addSystemEvent("Blue Cell is investigating live target events. The automatic monitor continues independently; use /mode red to return.");
+        context.addSystemEvent("Blue Cell 正在調查即時目標事件。自動監控會獨立持續執行；使用 /mode red 返回。");
         context.submit("Inspect the latest local target telemetry with blue_sensor_scan, investigate noteworthy events with blue_sensor_body when useful, and report evidence, uncertainty, and immediate defensive actions.");
         return;
       }
-      throw new Error("Usage: /blue up 127.0.0.1:3000 [--logs /absolute/host/logs] | status | verify | sources [1-100] | events [1-100] | incidents [1-100] | metrics | analyze | stop");
+      throw new Error("用法：/blue up 127.0.0.1:3000 [--logs /absolute/host/logs] | status | verify | sources [1-100] | events [1-100] | incidents [1-100] | metrics | analyze | stop");
     } catch (error) {
       context.addSystemEvent(`Blue sensor: ${error instanceof Error ? error.message : String(error)}`);
     }

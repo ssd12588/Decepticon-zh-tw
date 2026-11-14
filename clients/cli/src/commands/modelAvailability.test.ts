@@ -32,7 +32,7 @@ it("preserves locally configured Ollama and custom endpoint IDs", () => {
     CUSTOM_OPENAI_API_BASE: "http://localhost:9000/v1", CUSTOM_OPENAI_API_KEY: "x".repeat(30),
     DECEPTICON_LITELLM_MODELS: "custom/my-model" });
   expect(groups.Local).toEqual(["ollama_chat/qwen3-coder:30b"]);
-  expect(groups["Configured custom / local"]).toContain("custom/my-model");
+  expect(groups["已設定的自訂／本機"]).toContain("custom/my-model");
 });
 
 it("reads the mounted Compose config without returning keys in model choices", () => {

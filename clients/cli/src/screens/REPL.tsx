@@ -340,12 +340,12 @@ export function REPL({ initialMessage, resumeThread }: REPLProps) {
 
           {agent.error && <ErrorMessage content={agent.error} onDismiss={agent.clearError} />}
 
-          {/* No global "(ctrl+o to expand)" hint here: the Prompt footer
+          {/* No global "（ctrl+o 展開）" hint here: the Prompt footer
               already shows "ctrl+o: expand" persistently while idle, and
               truncated/collapsed items (BashResult, ToolGroupSummary, …)
               render their own hint inline. A blanket hint below the Static
               region duplicated whichever hint the last item already showed,
-              producing two identical "(ctrl+o to expand)" lines. */}
+              producing two identical "（ctrl+o 展開）" lines. */}
 
           {local.picker ? (
             <CommandPicker request={local.picker} onClose={() => local.setPicker(null)} onError={agent.addSystemEvent} />

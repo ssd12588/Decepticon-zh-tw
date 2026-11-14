@@ -19,7 +19,7 @@ import type { Command } from "./types.js";
 
 const file: Command = {
   name: "file",
-  description: "Load a prompt from a file and send it",
+  description: "從檔案載入提示詞並送出",
   aliases: ["f"],
   argumentHint: "<path>",
   complete: (args) => {
@@ -55,7 +55,7 @@ const file: Command = {
     const raw = args.trim();
     if (!raw) {
       ctx.addSystemEvent(
-        "Usage: /file <path>  — reads the file and sends its contents as a message.",
+        "用法：/file <path>  —— 讀取檔案並將其內容作為訊息送出。",
       );
       return;
     }
@@ -82,7 +82,7 @@ const file: Command = {
       ctx.submit(content);
     } catch (err: unknown) {
       const message =
-        err instanceof Error ? err.message : "Unknown error reading file";
+        err instanceof Error ? err.message : "讀取檔案時發生未知錯誤";
       ctx.addSystemEvent(`Failed to read file: ${message}`);
     }
   },

@@ -192,7 +192,7 @@ function isKnown(id: string): boolean {
 
 const model: Command = {
   name: "model",
-  description: "Show or change the LLM model for this session",
+  description: "顯示或變更本次工作階段使用的 LLM 模型",
   argumentHint: "[<model-id> | clear]",
   complete: (args) => ["clear", ...Object.values(configuredModelGroups(SUPPORTED_MODELS, modelEnvironment())).flat()].filter((id) => id.startsWith(args)),
   execute(args, ctx) {
@@ -207,7 +207,7 @@ const model: Command = {
         ctx.openPicker({
           title: `Configured routes · entitlement unverified (current: ${current || "default"})`,
           options: [
-            { label: "Default credential chain", value: "clear" },
+            { label: "預設憑證鏈", value: "clear" },
             ...configured.map((id) => ({ label: id, value: id })),
           ],
           onSelect: async (value) => { await model.execute(value, ctx); },
@@ -218,10 +218,10 @@ const model: Command = {
       lines.push(
         current
           ? `Active override: ${current}`
-          : "No override active — using the credentials-priority chain from .env",
+          : "目前沒有覆寫 —— 使用 .env 中的憑證優先順序鏈",
       );
       lines.push("");
-      lines.push("Configured route candidates (credentials and provider entitlement are not verified):");
+      lines.push("已設定的路由候選（憑證與供應商權益未經驗證）：");
       const listed = new Set<string>();
       for (const [group, ids] of Object.entries(groups)) {
         const fresh = ids.filter((id) => !listed.has(id));
@@ -232,11 +232,11 @@ const model: Command = {
           listed.add(id);
         }
       }
-      if (!configured.length) lines.push("  No configured routes found. Check the local .env or enter a custom model ID manually.");
+      if (!configured.length) lines.push("  找不到已設定的路由。請檢查本機 .env，或手動輸入自訂模型 ID。");
       lines.push("");
       lines.push("Usage:");
-      lines.push("  /model <id>     Switch the primary model for the next message");
-      lines.push("  /model clear    Drop the override, resume the default chain");
+      lines.push("  /model <id>     切換下一則訊息使用的主要模型");
+      lines.push("  /model clear    取消覆寫，回到預設備援鏈");
       ctx.addSystemEvent(lines.join("\n"));
       return;
     }
@@ -244,7 +244,7 @@ const model: Command = {
     // Clear
     if (arg === "clear" || arg === "off" || arg === "none") {
       setModelOverride("");
-      ctx.addSystemEvent("Model override cleared. Default chain resumes on next message.");
+      ctx.addSystemEvent("已清除模型覆寫。下一則訊息起回到預設備援鏈。");
       return;
     }
 

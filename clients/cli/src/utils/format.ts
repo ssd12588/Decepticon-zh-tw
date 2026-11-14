@@ -64,7 +64,7 @@ export function truncateLines(content: string, maxLines: number): string[] {
 const COMPACT_TOOL: Record<string, string> = {
   read_file: "Read",
   write_file: "Write",
-  edit_file: "Update",
+  edit_file: "更新",
   ls: "List",
   glob: "Glob",
   grep: "Grep",

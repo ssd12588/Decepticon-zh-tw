@@ -40,11 +40,11 @@ it.each(["scoped", "foreign", "unavailable"])("reads %s session diagnostics over
   try {
     const { readSessionDoctor } = await import("./sessionDoctor.js");
     const result = await readSessionDoctor("t");
-    expect(result.scope).toContain("machine scope ready");
+    expect(result.scope).toContain("機器範圍就緒");
     if (scenario === "scoped") {
       expect(result).toMatchObject({ checkpoint: "checkpoint-1", opplanRevision: "7", workflowPins: [`pentest@1.0 sha256:${hash}`], pending: "1 task(s); next tools", bundles: "standard: enabled, plugins: disabled" });
     } else {
-      expect(result.checkpoint).toContain("unavailable");
+      expect(result.checkpoint).toContain("無法使用");
       expect(requests).not.toContain("GET /threads/t/state");
     }
     expect(JSON.stringify(result)).not.toMatch(/secret transcript|private workflow content/);

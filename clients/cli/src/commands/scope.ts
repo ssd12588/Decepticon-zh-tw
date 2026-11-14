@@ -11,26 +11,26 @@ async function missing(filename: string): Promise<void> {
     if (error instanceof Error && "code" in error && error.code === "ENOENT") return;
     throw error;
   }
-  throw new Error("Scope already exists. Import will not replace plan/roe.json.");
+  throw new Error("範圍已存在。匯入不會覆寫 plan/roe.json。");
 }
 
 export const scope: Command = {
   name: "scope",
-  description: "Import an operator-provided engagement scope (create-only)",
+  description: "匯入操作員提供的授權測試範圍（僅限新建）",
   argumentHint: "import <file> --confirm",
   async execute(args, ctx) {
     try {
       const match = /^import\s+(.+?)\s+--confirm$/.exec(args.trim());
-      if (!match?.[1]) throw new Error("Usage: /scope import <file> --confirm");
-      if (!process.env.DECEPTICON_ENGAGEMENT) throw new Error("Scope import requires an engagement workspace.");
-      if (!ctx.mutateWorkspace) throw new Error("Scope import requires a safe paused workspace boundary.");
+      if (!match?.[1]) throw new Error("用法：/scope import <file> --confirm");
+      if (!process.env.DECEPTICON_ENGAGEMENT) throw new Error("匯入範圍需要在授權測試任務的工作區內執行。");
+      if (!ctx.mutateWorkspace) throw new Error("匯入範圍需要處於安全暫停狀態的工作區界線。");
       const root = process.env.DECEPTICON_WORKSPACE_PATH || "/workspace";
       const candidate = path.resolve(root, match[1]);
       const handle = await open(candidate, "r");
       let raw: Buffer;
       try {
         const info = await handle.stat();
-        if (!info.isFile() || info.size > MAX_ROE_BYTES) throw new Error("Scope must be a regular file no larger than 1 MiB.");
+        if (!info.isFile() || info.size > MAX_ROE_BYTES) throw new Error("範圍必須是一般檔案，且不超過 1 MiB。");
         raw = Buffer.alloc(MAX_ROE_BYTES + 1);
         let length = 0;
         while (length < raw.length) {
@@ -47,7 +47,7 @@ export const scope: Command = {
         const plan = path.join(root, "plan");
         await mkdir(plan, { recursive: true });
         const directory = await lstat(plan);
-        if (directory.isSymbolicLink() || !directory.isDirectory()) throw new Error("Refusing a symlink or non-directory plan path.");
+        if (directory.isSymbolicLink() || !directory.isDirectory()) throw new Error("拒絕符號連結或非目錄的計畫路徑。");
         const destination = path.join(plan, "roe.json");
         await missing(destination);
         const temporary = path.join(plan, `.roe-import-${randomUUID()}`);
@@ -61,7 +61,7 @@ export const scope: Command = {
           await unlink(temporary);
         }
       });
-      if (installed) ctx.addSystemEvent("Scope imported to plan/roe.json. Red enforces this scope.");
+      if (installed) ctx.addSystemEvent("範圍已匯入 plan/roe.json。紅隊模式會強制執行此範圍。");
     } catch (error) {
       ctx.addSystemEvent(error instanceof Error ? error.message : String(error));
     }

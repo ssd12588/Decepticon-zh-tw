@@ -2,7 +2,7 @@
  * SubAgentContext — suppresses UI hints inside sub-agent views.
  *
  * Claude Code pattern: when rendering inside a sub-agent's expanded view,
- * "(ctrl+o to expand)" hints are hidden to reduce noise.
+ * "（ctrl+o 展開）" hints are hidden to reduce noise.
  */
 
 import { createContext, useContext } from "react";

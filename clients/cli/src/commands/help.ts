@@ -7,7 +7,7 @@ const CATEGORIES: ReadonlyArray<readonly [string, readonly string[]]> = [
   ["Session", ["clear", "resume", "sessions", "queue", "export", "file"]],
   ["Model & agents", ["model", "agent"]],
   ["Mode & scope", ["mode", "scope"]],
-  ["Blue monitoring", ["blue", "alerts", "status"]],
+  ["Blue 監控", ["blue", "alerts", "status"]],
   ["Diagnostics", ["doctor"]],
   ["Stack & plugins", ["plugins", "mcp"]],
   ["Meta", ["help", "quit"]],
@@ -24,7 +24,7 @@ const EXAMPLES: ReadonlyArray<readonly [string, string]> = [
 
 const help: Command = {
   name: "help",
-  description: "Show available commands and shortcuts",
+  description: "顯示可用指令與快速鍵",
   aliases: ["?"],
   execute(_args, ctx) {
     const commands = getCommands();

@@ -41,7 +41,7 @@ it.each(["new", "plan"])("rejects unsupported arguments instead of dropping the 
   // Then no destructive action or mode switch happens
   expect(ctx.clearEvents).not.toHaveBeenCalled();
   expect(ctx.selectAssistant).not.toHaveBeenCalled();
-  expect(ctx.addSystemEvent).toHaveBeenCalledWith(expect.stringContaining("Usage:"));
+  expect(ctx.addSystemEvent).toHaveBeenCalledWith(expect.stringContaining("用法："));
 });
 
 it("shows both workspace and process paths when the CLI is containerized", async () => {

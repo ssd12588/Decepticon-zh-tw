@@ -13,11 +13,11 @@ const base: DoctorReportInput = {
 describe("formatDoctorReport", () => {
   it("shows unscoped/default/not-confirmed when nothing is set", () => {
     const report = formatDoctorReport(base);
-    expect(report).toContain("Engagement: not selected");
-    expect(report).toContain("target none (unscoped)");
-    expect(report).toContain("authorization not confirmed");
-    expect(report).toContain("execution default (no pin) · planning default (no pin)");
-    expect(report).toContain("no budget_warning event yet this run");
+    expect(report).toContain("Engagement: 未選擇");
+    expect(report).toContain("target none (未設定範圍)");
+    expect(report).toContain("authorization 未確認");
+    expect(report).toContain("execution 預設（未鎖定） · planning 預設（未鎖定）");
+    expect(report).toContain("本次執行尚無 budget_warning 事件");
     expect(report).toContain("decepticon doctor --deep");
   });
 
@@ -37,7 +37,7 @@ describe("formatDoctorReport", () => {
       budgetUsage: { spent: 0.35, cap: 0.5, pct: 70 },
     });
     expect(report).toContain("Engagement: acme");
-    expect(report).toContain("target 10.0.0.1 (direct_scope) · authorization confirmed");
+    expect(report).toContain("target 10.0.0.1 (direct_scope) · authorization 已確認");
     // version defaults to "latest" when a pinned workflow omits it
     expect(report).toContain("execution redteam@3 · planning plan@latest");
     expect(report).toContain("anthropic/claude-opus-4-7");

@@ -2,7 +2,7 @@ import type { Command } from "./types.js";
 
 const resume: Command = {
   name: "resume",
-  description: "Choose a saved session and continue its conversation",
+  description: "選擇已儲存的工作階段並接續對話",
   aliases: ["r", "continue"],
   argumentHint: "[thread-id]",
   execute(args, ctx) {

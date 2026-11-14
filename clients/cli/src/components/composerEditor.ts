@@ -17,14 +17,14 @@ export function editorArguments(command: string): readonly string[] {
     else if (/\s/.test(char)) { if (token) { tokens.push(token); token = ""; } }
     else token += char;
   }
-  if (quote || escaped) throw new TypeError("Unclosed quote or escape in EDITOR/VISUAL");
+  if (quote || escaped) throw new TypeError("EDITOR/VISUAL 中有未閉合的引號或跳脫字元");
   if (token) tokens.push(token);
   return tokens;
 }
 
 export function editExternally(value: string): string {
   const [command, ...args] = editorArguments(process.env.VISUAL || process.env.EDITOR || "vi");
-  if (!command) throw new TypeError("EDITOR/VISUAL must name an executable");
+  if (!command) throw new TypeError("EDITOR/VISUAL 必須指向可執行的程式");
   const directory = mkdtempSync(join(tmpdir(), "decepticon-draft-"));
   const path = join(directory, "draft.md");
   try {

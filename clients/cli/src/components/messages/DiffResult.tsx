@@ -112,7 +112,7 @@ export const DiffResult = React.memo(function DiffResult({
       <Box flexDirection="column" marginTop={1}>
         <Text color={PALETTE.text}>
           <Text color={PALETTE.error}>{`${GLYPH_DOT} `}</Text>
-          <Text color={PALETTE.text} bold>Update</Text>
+          <Text color={PALETTE.text} bold>更新</Text>
           <Text color={PALETTE.text} dimColor italic>{`(${shortPath(filePath)})`}</Text>
         </Text>
         <Text color={PALETTE.text}>
@@ -129,7 +129,7 @@ export const DiffResult = React.memo(function DiffResult({
       <Box flexDirection="column" marginTop={1}>
         <Text color={PALETTE.text}>
           <Text color={PALETTE.success}>{`${GLYPH_DOT} `}</Text>
-          <Text color={PALETTE.text} bold>Update</Text>
+          <Text color={PALETTE.text} bold>更新</Text>
           <Text color={PALETTE.text} dimColor italic>{`(${shortPath(filePath)})`}</Text>
         </Text>
         <Text color={PALETTE.text}>
@@ -155,7 +155,7 @@ export const DiffResult = React.memo(function DiffResult({
       {/* Header: ● Update(path) */}
       <Text color={PALETTE.text}>
         <Text color={PALETTE.success}>{`${GLYPH_DOT} `}</Text>
-        <Text color={PALETTE.text} bold>Update</Text>
+        <Text color={PALETTE.text} bold>更新</Text>
         <Text color={PALETTE.text} dimColor italic>{`(${shortPath(filePath)})`}</Text>
       </Text>
 

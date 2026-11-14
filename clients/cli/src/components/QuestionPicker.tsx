@@ -12,7 +12,7 @@ interface QuestionPickerProps {
   onCancel: () => void;
 }
 
-const OTHER_LABEL = "Other (type your answer)";
+const OTHER_LABEL = "其他（自行輸入答案）";
 
 /** Single-select / multi-select picker with optional free-text "Other" fallback.
  *
@@ -220,7 +220,7 @@ export const QuestionPicker = React.memo(function QuestionPicker({
             <Text color={PALETTE.text}>{"› "}</Text>
             <TextInput
               key={otherKey}
-              placeholder="Type your answer"
+              placeholder="輸入你的答案"
               onSubmit={submitOther}
             />
           </Box>
@@ -241,12 +241,12 @@ function KeybindingHints({
   otherMode: boolean;
 }) {
   if (otherMode) {
-    return <Text color={PALETTE.text} dimColor>{"  enter: submit  esc: back to options"}</Text>;
+    return <Text color={PALETTE.text} dimColor>{"  enter：送出  esc：回到選項"}</Text>;
   }
   if (multiSelect) {
     return (
       <Text color={PALETTE.text} dimColor>
-        {"  ↑/↓: move  space: toggle  enter: submit selected  esc: cancel"}
+        {"  ↑/↓：移動  space：切換  enter：送出所選  esc：取消"}
       </Text>
     );
   }

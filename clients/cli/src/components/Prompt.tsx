@@ -231,7 +231,7 @@ function Composer({ runState, onSubmit, activeAgent = null, assistantId = "decep
       {queuedMessage && isActive && <Text color={PALETTE.text} dimColor>Queued: {queuedMessage}</Text>}
       <Box ref={inputBox} borderStyle="round" borderColor={PALETTE.border} backgroundColor={PALETTE.surface} paddingX={1}><Text color={PALETTE.focus}>{"› "}</Text><Text color={PALETTE.text}>{viewport.text.slice(0, viewport.cursor)}<Text color={PALETTE.text} inverse>{cursorGlyph === "\n" || !cursorGlyph ? " " : cursorGlyph}</Text>{viewport.text.slice(viewport.cursor + (cursorGlyph === "\n" ? 0 : cursorGlyph.length))}</Text></Box>
       {lineCount > 3 && <Text color={PALETTE.text} dimColor>{lineCount} display rows · {value.length} characters · Ctrl+G opens editor</Text>}
-      {search !== null && <Text color={PALETTE.text}>History search: {search} · {matches[searchIndex] ?? "No match"}</Text>}
+      {search !== null && <Text color={PALETTE.text}>History search: {search} · {matches[searchIndex] ?? "沒有符合項目"}</Text>}
       <Box ref={completionBox} flexDirection="column">{choices.slice(menuStart, menuStart + 6).map((choice, index) => <Text key={choice.value} wrap="truncate-end" bold={index + menuStart === selected} color={index + menuStart === selected ? PALETTE.focus : PALETTE.muted}>{index + menuStart === selected ? "› " : "  "}{choice.value} — {choice.description}{choice.hint ? ` [${choice.hint}]` : ""}</Text>)}</Box>
       {!hideStatus && <SessionFooter runState={runState} assistantId={assistantId} activeAgent={activeAgent} engagement={engagement} model={model || getModelOverride()} connection={connectionStatus} />}
       {help && KEYBOARD_HELP.map((line) => <Text color={PALETTE.text} key={line} dimColor>{line}</Text>)}

@@ -24,19 +24,19 @@ function pin(value: unknown): string | null {
 }
 
 export async function readSessionDoctor(threadId: string | null): Promise<SessionDoctor> {
-  let scope = "machine scope unavailable";
-  try { await assertRedApproved(); scope = "machine scope ready (runtime enforces targets and authorized windows)"; }
-  catch { scope = "machine scope unavailable or invalid; Red remains gated"; }
+  let scope = "機器範圍無法使用";
+  try { await assertRedApproved(); scope = "機器範圍就緒（執行期會強制檢查目標與授權時段）"; }
+  catch { scope = "機器範圍無法使用或無效；紅隊模式仍受限制"; }
   const [stateResult, bundlesResult] = await Promise.allSettled([
     threadId ? readThreadSnapshot(threadId) : Promise.resolve(null),
     fetch(`${process.env.DECEPTICON_API_URL || "http://localhost:2024"}/_decepticon/bundles`, { signal: AbortSignal.timeout(10_000) }).then(async response => {
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const data = record(await response.json());
-      if (!Array.isArray(data.bundles)) throw new Error("Invalid bundle response");
+      if (!Array.isArray(data.bundles)) throw new Error("外掛組合回應格式無效");
       return data.bundles.flatMap((value: unknown) => {
         const item = record(value);
         return typeof item.name === "string" && typeof item.enabled === "boolean" ? [`${item.name}: ${item.enabled ? "enabled" : "disabled"}`] : [];
-      }).slice(0, 64).join(", ") || "none registered";
+      }).slice(0, 64).join(", ") || "未註冊任何項目";
     }),
   ]);
   const state = stateResult.status === "fulfilled" ? record(stateResult.value) : {};
@@ -45,7 +45,7 @@ export async function readSessionDoctor(threadId: string | null): Promise<Sessio
   const checkpoint = record(state.checkpoint);
   const tasks = Array.isArray(state.tasks) ? state.tasks : [];
   const next = Array.isArray(state.next) ? state.next.filter((value): value is string => typeof value === "string").slice(0, 32) : [];
-  const unavailable = stateResult.status === "rejected" ? "unavailable (checkpoint read failed or session scope mismatch)" : "not yet recorded";
+  const unavailable = stateResult.status === "rejected" ? "無法使用（讀取 checkpoint 失敗，或工作階段範圍不一致）" : "尚未記錄";
   return {
     scope,
     controls: describeRunControls(values.run_controls),
@@ -53,6 +53,6 @@ export async function readSessionDoctor(threadId: string | null): Promise<Sessio
     opplanRevision: typeof values.plan_revision === "number" ? String(values.plan_revision) : unavailable,
     workflowPins: pins,
     pending: stateResult.status === "rejected" ? unavailable : `${tasks.length} task(s); next ${next.join(", ") || "none"}`,
-    bundles: bundlesResult.status === "fulfilled" ? bundlesResult.value : "unavailable (runtime bundle read failed)",
+    bundles: bundlesResult.status === "fulfilled" ? bundlesResult.value : "無法使用（讀取執行期外掛組合失敗）",
   };
 }

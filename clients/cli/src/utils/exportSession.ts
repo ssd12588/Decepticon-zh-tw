@@ -30,7 +30,7 @@ export async function exportSession(args: string, snapshot: SessionSnapshot): Pr
   const content = format === "json"
     ? JSON.stringify({ schemaVersion: 1, exportedAt: timestamp, ...snapshot }, null, 2) + "\n"
     : ["# Decepticon conversation", "", `Engagement: ${snapshot.engagement}`,
-      `Agent: ${snapshot.assistant}`, `Thread: ${snapshot.threadId ?? "not started"}`,
+      `Agent: ${snapshot.assistant}`, `Thread: ${snapshot.threadId ?? "尚未開始"}`,
       `Exported: ${timestamp}`, "", ...snapshot.events.flatMap((event) => [
         `## ${event.type}${event.subagent ? ` · ${event.subagent}` : ""}`,
         "", event.content, "",

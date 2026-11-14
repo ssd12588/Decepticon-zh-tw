@@ -7,6 +7,6 @@ it("separates selected model, observed route, requested effort and context state
   const frame = view.lastFrame();
   expect(frame).toContain("RED"); expect(frame).toContain("auth/gpt-5.6-sol"); expect(frame).toContain("Route auth/gpt-6-astra");
   expect(frame).toContain("Effort provider default (requested)"); expect(frame).toContain("Context ≈4,091");
-  expect(frame).toContain("follow-up to continue"); expect(frame).toContain("/resume sessions");
+  expect(frame).toContain("後續訊息以繼續"); expect(frame).toContain("/resume 工作階段");
   view.unmount();
 });

@@ -38,7 +38,7 @@ export function useLocalCommands({ agent, blue, connection, onSessionSelected }:
     setPicker({
       title: `Sessions · ${scope === "current" ? process.env.DECEPTICON_ENGAGEMENT || "current workspace" : scope}`,
       options: saved.map((entry) => ({ value: entry.threadId, label: entry.title,
-        description: `${entry.engagementName || (entry.legacyMetadata ? "legacy: workspace unverified" : "unscoped")} · ${entry.assistantId} · ${entry.lastUsed}` })),
+        description: `${entry.engagementName || (entry.legacyMetadata ? "legacy: workspace unverified" : "未設定範圍")} · ${entry.assistantId} · ${entry.lastUsed}` })),
       onSelect: (id) => {
         const selected = saved.find((entry) => entry.threadId === id);
         if (selected?.legacyMetadata) {
@@ -64,10 +64,10 @@ export function useLocalCommands({ agent, blue, connection, onSessionSelected }:
         case "status":
           agent.addSystemEvent([
             `Decepticon ${CLI_VERSION}`,
-            `Engagement: ${process.env.DECEPTICON_ENGAGEMENT || "not selected"}`,
+            `Engagement: ${process.env.DECEPTICON_ENGAGEMENT || "未選擇"}`,
             `Agent: ${agent.assistantId} · Run: ${agent.runState}`,
-            `Model: ${getModelOverride() || "automatic provider routing (no session override)"}`,
-            `Session: ${agent.threadId || "not started"} · LangGraph: ${connection}`,
+            `Model: ${getModelOverride() || "自動供應商路由（本次工作階段未覆寫）"}`,
+            `Session: ${agent.threadId || "尚未開始"} · LangGraph: ${connection}`,
             `Blue: ${blue.status} · Collector: ${blue.collectorStatus} · AI: ${blue.aiStatus} · Unread: ${blue.unreadCount}`,
             ...(blue.error ? [`Blue connection: ${blue.error}`] : []),
             ...(connection === "disconnected" ? ["Run decepticon doctor on the host, then /resume and select the saved session."] : []),
@@ -102,7 +102,7 @@ export function useLocalCommands({ agent, blue, connection, onSessionSelected }:
           await openSessions(scope); return;
         }
         case "export": {
-          const filename = await exportSession(args, { engagement: process.env.DECEPTICON_ENGAGEMENT || "unscoped",
+          const filename = await exportSession(args, { engagement: process.env.DECEPTICON_ENGAGEMENT || "未設定範圍",
             assistant: agent.assistantId, threadId: agent.threadId, events: agent.events });
           agent.addSystemEvent(`Conversation exported to ${filename} (owner-only permissions).`); return;
         }

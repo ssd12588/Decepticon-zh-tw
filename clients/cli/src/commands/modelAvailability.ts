@@ -95,6 +95,6 @@ export function configuredModelGroups(groups: Readonly<Record<string, readonly s
     if (available.length) { result[group] = available; available.forEach((id) => seen.add(id)); }
   }
   const custom = dynamicModelIds(env).filter((id) => !seen.has(id) && isConfiguredModel(id, env));
-  if (custom.length) result["Configured custom / local"] = [...new Set(custom)].sort();
+  if (custom.length) result["已設定的自訂／本機"] = [...new Set(custom)].sort();
   return result;
 }

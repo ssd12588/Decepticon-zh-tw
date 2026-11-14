@@ -6,21 +6,21 @@ import { CLI_VERSION } from "../utils/version.js";
 export const convenienceCommands: Command[] = [
   {
     name: "plan",
-    description: "Enter optional Plan mode (same as /mode plan)",
+    description: "進入選用的計畫模式（等同 /mode plan）",
     execute(args, context) {
-      if (args.trim()) { context.addSystemEvent("Usage: /plan (then send your planning message)"); return; }
+      if (args.trim()) { context.addSystemEvent("用法：/plan（接著送出你的規劃訊息）"); return; }
       return mode.execute("plan", context);
     },
   },
   {
     name: "shortcuts",
-    description: "Show keyboard shortcuts",
+    description: "顯示鍵盤快速鍵",
     execute(_args, context) { context.addSystemEvent(KEYBOARD_HELP.join("\n")); },
   },
   {
     name: "version",
     aliases: ["about"],
-    description: "Show the running Decepticon version and CLI runtime",
+    description: "顯示執行中的 Decepticon 版本與 CLI 執行環境",
     execute(_args, context) {
       context.addSystemEvent(`Decepticon ${CLI_VERSION}\nCLI runtime: Node ${process.version} · ${process.platform}/${process.arch}`);
     },
@@ -28,7 +28,7 @@ export const convenienceCommands: Command[] = [
   {
     name: "pwd",
     aliases: ["cwd"],
-    description: "Show the target workspace and CLI process directory",
+    description: "顯示目標工作區與 CLI 執行目錄",
     execute(_args, context) {
       context.addSystemEvent(`Target workspace: ${process.env.DECEPTICON_WORKSPACE_PATH || "/workspace"}\nCLI process directory: ${process.cwd()}`);
     },
