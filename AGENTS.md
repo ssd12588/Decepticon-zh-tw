@@ -1,38 +1,32 @@
-# Versioned change tracking
+# 版本化變更追蹤
 
-The user reported GitHub Actions account billing/spending limits and requires
-local verification. Run applicable checks locally and record actual results and
-limitations. Inspect exact-head hosted checks when available; claim CI success
-only when it actually ran. Open qualified PRs ready for review and preserve
-repository protections.
+使用者反映 GitHub Actions 帳號的計費／額度上限，因此要求以本機驗證為準。請在本機
+執行適用的檢查，並記錄實際結果與限制。有 hosted 檢查可用時，請檢視「精確 head」
+的檢查結果；只有在 CI 真的跑過時才能宣稱 CI 成功。開出品質合格、可直接審查的 PR，
+並保留儲存庫的保護設定。
 
-Before opening or updating any PR, including documentation or maintenance changes,
-update the single root `CHAGELOG.md` and link it from the PR description. Preserve
-the full existing history and release automation; do not create another changelog.
-Record user-visible changes, fixes and
-compatibility/upgrade notes with PR links under Unreleased; distinguish proposed,
-merged and released changes. On release, move entries into a dated section using
-the actual version or immutable release identifier. Do not invent dates, bump
-unrelated versions or edit another dirty worktree. SaaS releases and OSS package
-versions are independent.
+在開啟或更新任何 PR（包含文件或維護性變更）之前，請更新唯一的根目錄
+`CHAGELOG.md`，並從 PR 說明連結它。保留既有的完整歷史與發行自動化；不要另外建立
+變更日誌。請在 Unreleased 之下記錄使用者可見的變更、修正與相容性／升級注意事項，
+並附上 PR 連結；區分「提案中」、「已合併」與「已發行」的變更。發行時，把條目移入
+帶日期的區段，並使用實際版本或不可變的發行識別碼。不要憑空編造日期、任意提升不相關
+的版本，也不要編輯另一個有未提交變更的工作樹。SaaS 發行與開源套件版本彼此獨立。
 
-For each task, fetch and confirm the latest remote main, then create a separate
-task branch/worktree from it. Preserve other dirty worktrees. After confirming
-the task PR merged, remove its worktree only after checking for uncommitted,
-unpushed or active/shared work.
+每個任務都請先取得並確認最新的遠端 main，再從它建立獨立的任務分支／工作樹。保留其他
+有未提交變更的工作樹。確認任務 PR 已合併後，才能移除其工作樹，且移除前必須先確認
+沒有未提交、未推送或仍在使用的共用工作。
 
-# Extension architecture
+# 擴充架構
 
-Before extending agents, skills, workflows or client adapters, read
-[the extension contract](docs/design/extension-contract.md). Keep stable capability
-cores, reusable SKILL.md knowledge, per-process WORKFLOW.md contracts and trusted
-client launch/authorization adapters separate. Preserve immutable workflow pins,
-OPPLAN ownership and optional explicit Plan mode.
+在擴充代理、技能、工作流程或用戶端轉接器之前，請先讀
+[擴充契約](docs/design/extension-contract.md)。請維持「穩定的能力核心」、「可重複
+使用的 SKILL.md 知識」、「以行程為單位的 WORKFLOW.md 契約」與「受信任的用戶端
+啟動／授權轉接器」彼此分離。保留不可變的工作流程鎖定、OPPLAN 擁有權，以及選用的
+顯式計畫模式。
 
-# OSS release policy
+# 開源發行政策
 
-Before selecting a version, tagging, publishing or recovering an OSS release,
-follow [RELEASE.md](RELEASE.md): classify by compatibility/user impact, verify
-actual WSL product and candidate artifacts, preserve immutable versions and user
-data, and record the actual publication date. A merged PR does not authorize a
-release or require a version bump. SaaS identifiers remain independent.
+在選擇版本、打標籤、發布或救援開源發行之前，請遵循 [RELEASE.md](RELEASE.md)：
+依相容性與使用者影響分類、驗證實際的 WSL 產品與候選產物、保留不可變的版本與使用者
+資料，並記錄實際發布日期。PR 已合併不代表授權發行，也不代表必須提升版本。SaaS 的
+識別碼維持獨立。

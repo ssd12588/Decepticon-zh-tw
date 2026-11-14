@@ -76,7 +76,8 @@
 **本漢化版由 [阿樂](https://github.com/ssd12588) 負責繁體中文漢化與維護。**
 
 - 本倉庫是 [BitterSecurity/Decepticon](https://github.com/BitterSecurity/Decepticon) 的**繁體中文漢化版**，依 Apache-2.0 授權散布，原始版權聲明與 [`LICENSE`](LICENSE) 均完整保留。
-- **已漢化**：終端機（CLI）說明與錯誤訊息、`decepticon onboard` 初始化精靈、Go 啟動器的 TUI 介面與工作階段選擇器、Ink 對話介面、Python 無介面 CLI、`docs/` 文件、`AGENTS.md`、`CONTRIBUTING.md` 與本 README。
+- **已漢化**：終端機（CLI）主畫面與第一批指令的說明與錯誤訊息（`--help`、`status`、`logs`、`doctor`、`update`…）、`doctor` 診斷輸出與復原指令、`AGENTS.md`、本 README，以及 `docs-zh/` 完整中文入門包。
+- **進行中**：`decepticon onboard` 初始化精靈、TUI 面板與工作階段選擇器、Python 無介面 CLI、`CONTRIBUTING.md`、`docs/` 全量文件（進度見 [PROJECT-STATUS](docs-zh/PROJECT-STATUS.md)）。
 - **中文入門文件**：[10 分鐘上手](docs-zh/QUICKSTART.md) · [常見錯誤排錯](docs-zh/TROUBLESHOOTING.md) · [術語對照表](docs-zh/glossary.md) · [專案狀態（交接用）](docs-zh/PROJECT-STATUS.md)
 - **Windows 一鍵啟動**：[`start-decepticon.ps1`](start-decepticon.ps1)：檢查 Docker、記住模型與金鑰、給出中文的友善錯誤提示。
 - **繁體中文輸出**：上游已內建語言機制，設定 `DECEPTICON_LANGUAGE=tw` 之後，代理所有「給人看」的說明（進度、總結、狀態、錯誤訊息）都會改用繁體中文，而工具名稱、CLI 指令、檔案路徑、程式碼與技術縮寫仍保留英文。
